@@ -1,0 +1,57 @@
+{% extends "index/base.html" %}
+
+{% load static %}
+
+{% block content %}
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta http-equiv="X-UA-Compatible" content="ie=edge" />
+    <!--<title>Registration Form in HTML CSS</title>-->
+    <!---Custom CSS File--->
+    <link href="{% static 'index/css/stylesregservicio.css' %}" rel="stylesheet">
+    
+</head>
+
+<body>
+    <a class="back-button" href="{% url 'Lista Servicio'%}"><i class="fas fa-arrow-left"></i> Volver</a>
+
+    <div class="contenidoreg">
+
+        <section class="containeres">
+
+            <header>Registro de Servicios</header>
+
+            <form action="" method="POST" class="form">
+                {% csrf_token %}
+
+                <div class="input-box">
+                    <label>Codigo</label>
+                    {{ form.codigo }}
+                </div>
+                <div class="input-box">
+                    <label>Descripción</label>
+                    {{ form.descripcion }}
+                </div>
+                <div class="input-box">
+                    <label>Precio Venta</label>
+                    {{ form.precio }}
+                </div>
+                <div class="input-box">
+                    <label>Profesional</label>
+                    {{ form.profesional }}
+                </div>
+
+                <div class="button-container">
+                    <button type="submit" >Guardar</button>
+                </div>
+            </form>
+        </section>
+    </div>
+</body>
+<script>
+    function goBack() {
+        window.history.back();
+    }
+</script>
+{% endblock %}

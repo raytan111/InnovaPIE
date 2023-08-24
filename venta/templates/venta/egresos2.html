@@ -1,0 +1,457 @@
+{% extends "index/base.html" %}
+
+{% load static %}
+
+{% load custom_filters %}
+
+{% block content %}
+<head>
+    <title>Egresos</title>
+    <link href="https://fonts.googleapis.com/css2?family=Roboto+Slab:wght@700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="{% static 'index/css/styleegreso.css' %}">
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@10"></script>
+
+    <style>
+        .totals-container {
+            display: flex;
+            justify-content: space-around;
+            margin-bottom: 20px;
+        }
+        
+        .recuadrox {
+            display: flex;
+            flex-direction: column;
+            align-items: center; /* Alinea el texto horizontalmente en el centro */
+            justify-content: center; /* Alinea el texto verticalmente en el centro */
+            width: 250px;
+            height: 100px;
+            border-radius: 5px;
+            background-color: #47BFE9;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+            margin-top: 10px;
+            margin-right: 110px;
+            margin-left: 110px;
+        }
+
+        .recuadrox p {
+          font-size: 20px;  /* Ajusta este valor a lo que necesites */
+        }
+
+        .recuadrox red{
+            background-color: #BD1521;
+        }
+
+        .recuadrox h2 {
+          font-size: 25px;  /* Ajusta este valor a lo que necesites */
+        }
+
+        .eliminar-button{
+          background-color: #a7c2a8;
+          color: #070505;
+          padding: 7px 15px;
+          border: none;
+          border-radius: 5px;
+          cursor: pointer;
+          margin-right: 5px;
+          margin-left: 15px;
+          margin-bottom: 5px;
+          display: inline-block;
+          width: auto;
+          height: auto;
+        }
+        
+    </style>
+</head>
+
+<body>
+  <a class="back-button" href="{% url 'venta'%}"><i class="fas fa-arrow-left"></i> Volver</a>
+
+    <div class="title-container">
+        <h1>Egresos</h1>
+    </div>
+    <div class="monthpicker-container text-center">
+        <form method="POST" action="{% url 'egresof' %}">
+            {% csrf_token %}
+            <label for="fecha">Fecha:</label>
+            <input type="month" id="fecha" name="fecha" value="{{ fecha_str }}">
+            <input type="submit" value="Filtrar">
+        </form>
+    </div>
+    
+    <div class="totals-container">
+        <div class="recuadrox">
+            <h2>Total Variable</h2>
+            <p>${{ total_variable|format_clp }}</p>
+        </div>
+        <div class="recuadrox">
+          <h2>Total Fijo</h2>
+          <p>${{ total_fijo|format_clp }}</p>
+        </div>
+        <div class="recuadrox">
+            <h2>Total Boletas</h2>
+            <p>${{ total_boletas|format_clp }}</p>
+        </div>
+        <div class="recuadrox red" style="background-color: #BD1521;">
+          <h2>Total Egreso</h2>
+          <p>${{ total|format_clp }}</p>
+      </div>
+    </div>
+
+    <div class="flex-container">
+        <div class="contenidoreg">
+            <h2 class="form-register">Costos Variables</h2>
+                <div class="search-container">
+                    <div></div>
+                    <div class="center-button">
+                        <a id="agregar-variable" class="botonagregar boton-agregar" href="#"><i class="fas fa-plus"></i></a>
+                    </div>
+                </div>
+                <div class="scrollable-table">
+                  <table id="tabla-pagos" class="cliente-table">
+                        <th class="cliente-column">Nombre</th>
+                        <th class="cliente-column">Fecha</th>
+                        <th class="cliente-column">Impuesto ($)</th>
+                        <th class="cliente-column">Pago ($)</th>
+                        <th class="cliente-column">Acciones</th>
+                    </tr>
+                    {% for variables in variables %}
+                      <tr class="cliente-row">
+                          <td class="cliente-column" id="pago-total">{{ variables.nombre }}</td>
+                          <td class="cliente-column">{{ variables.fecha|date:"d/m/Y" }}</td>
+                          <td class="cliente-column">{{ variables.impuesto|format_clp }}</td>
+                          <td class="cliente-column" id="pago-total">{{ variables.total|format_clp }}</td>
+                          <td class="cliente-column">
+                             <a href="{% url 'descargar_archivo_costo_variable' variables.id %}" class="accion-button descargar-button"><i class="fas fa-download"></i></a>
+                             <a style="color: white; background-color: #d60e0e;" href="{% url 'eliminar_variable' variables.id %}" data-id="{{ variables.id }}" id="eliminar-btn-{{ variables.id }}" class="eliminar-button"><i class="fas fa-trash"></i></a>
+                          </td>
+                      </tr>
+                    {% endfor %}
+                </table>
+              </div>
+            </div>
+
+        <div class="contenidoreg">
+            <h2 class="form-register">Costos Fijos</h2>
+            <div class="search-container">
+                <div></div>
+                <div class="center-button">
+                    <a id="agregar-fijo" class="botonagregar boton-agregar" href="#"><i class="fas fa-plus"></i></a>
+
+                </div>
+            </div>
+            <div class="scrollable-table">
+              <table id="tabla-pagos" class="cliente-table">
+                        <th class="cliente-column">Nombre</th>
+                        <th class="cliente-column">Fecha</th>
+                        <th class="cliente-column">Impuesto ($)</th>
+                        <th class="cliente-column">Pago ($)</th>
+                        <th class="cliente-column">Acciones</th>
+                    </tr>
+                    {% for fijos in fijos %}
+                    <tr class="cliente-row">
+                        <td class="cliente-column" id="pago-total">{{ fijos.nombre }}</td>
+                        <td class="cliente-column">{{ fijos.fecha|date:"d/m/Y" }}</td>
+                        <td class="cliente-column">{{ fijos.impuesto|format_clp }}</td>
+                        <td class="cliente-column" id="pago-total">{{ fijos.total|format_clp }}</td>
+                        <td>
+                          <a href="{% url 'descargar_archivo_costo_fijo' fijos.id %}" class="accion-button descargar-button"><i class="fas fa-download"></i></a>
+                          <a style="color: white; background-color: #d60e0e;" href="{% url 'eliminar_fijo' fijos.id %}" data-id="{{ fijos.id }}" id="eliminar-btn-{{ fijos.id }}" class="eliminar-button"><i class="fas fa-trash"></i></a>
+                        </td>
+                      
+                    </tr>
+                    {% endfor %}
+                </table>
+              </div>
+            </div>
+        </div>
+
+        <div class="contenidoregist">
+            <h2 class="form-register">Boletas de Honorarios / Facturas</h2>
+            <div class="search-container">
+                <div></div>
+                <div class="center-button">
+                    <a id="agregar-boleta" class="botonagregar boton-agregar" href="#"><i class="fas fa-plus"></i></a>
+
+                </div>
+            </div>
+            <div class="scrollable-table">
+              <table id="tabla-pagos" class="cliente-table">
+                        <th class="cliente-column">Numero Boleta</th>
+                        <th class="cliente-column">Fecha</th>
+                        <th class="cliente-column">N Evaluados</th>
+                        <th class="cliente-column">Retención ($)</th>
+                        <th class="cliente-column">Total ($)</th>
+                        <th class="cliente-column">Acciones</th>
+                    </tr>
+                    {% for boletas in boletas %}
+                    <tr class="cliente-row">
+                      <td class="cliente-column">{{ boletas.numero }}</td>
+                      <td class="cliente-column">{{ boletas.fecha|date:"d/m/Y" }}</td>
+                      <td class="cliente-column">{{ boletas.cantidad_evaluaciones }}</td>
+                      <td class="cliente-column">{{ boletas.retencion|format_clp }}</td>
+                      <td class="cliente-column" id="factura-total">{{ boletas.total|format_clp }}</td>
+                      <td>
+                        <a href="{% url 'descargar_boleta_honorario' boletas.id %}" class="accion-button descargar-button"><i class="fas fa-download"></i></a>
+                        <a style="color: white; background-color: #d60e0e;" href="{% url 'eliminar_boleta' boletas.id %}" data-id="{{ boletas.id }}" id="eliminar-btn-{{ boletas.id }}" class="eliminar-button"><i class="fas fa-trash"></i></a>
+                      </td>
+                    </tr>
+                    {% endfor %}
+                </table>
+              </div>
+            </div>
+        </div>
+
+</body>
+
+<script>
+    function mostrarPopup() {
+      Swal.fire({
+        title: 'Agrega un costo fijo',
+        html: `
+        <form id="formulario-costo" method="POST" enctype="multipart/form-data" action="{% url 'nuevo_costo' %}">
+            {% csrf_token %}
+                <div class="form-group">
+                  <label for="nombreCosto" class="custom-form-label">Nombre:</label>
+                  <input type="text" name="nombre" class="form-control" id="nombreCosto" placeholder="Nombre del costo" required>
+                </div>
+                <div class="form-group">
+                  <label for="fechaCosto" class="custom-form-label">Fecha:</label>
+                  <input type="date" name="fecha" class="form-control" id="fechaCosto" required>
+                </div>
+                <div class="form-group">
+                  <label for="archivoCosto" class="custom-form-label">Archivo:</label>
+                  <div class="input-group">
+                    <div class="custom-file">
+                      <input type="file" name="archivo" class="custom-file-input" id="archivoCosto" required>
+                      <label class="custom-file-label" for="archivoCosto">Seleccionar archivo</label>
+                    </div>
+                  </div>
+                </div>
+                <div class="form-group">
+                  <label for="impuestoCosto" class="custom-form-label">Impuesto ($):</label>
+                  <input type="number" name="impuesto" class="form-control" id="impuestoCosto" required>
+                </div>
+                <div class="form-group">
+                  <label for="totalCosto" class="custom-form-label">Total ($):</label>
+                  <input type="number" name="total" class="form-control" id="totalCosto" required>
+                </div>
+                <button type="submit" id="guardar-costo" style="display: none;">Guardar</button>
+              </form>
+              `,
+              showCancelButton: true,
+              confirmButtonText: 'Guardar Costo',
+              cancelButtonText: 'Cancelar',
+              preConfirm: () => {
+                document.getElementById('guardar-costo').click();
+              },
+            });
+      
+            const formularioCosto = document.getElementById('formulario-costo');
+            formularioCosto.addEventListener('submit', function(event) {
+              event.preventDefault();
+              const formData = new FormData(formularioCosto);
+              fetch(formularioCosto.action, {
+                method: formularioCosto.method,
+                body: formData
+              })
+              .then(response => response.json()) // Añade esta línea
+              .then(data => {
+                if (data.status === 'ok') { // Cambia esta línea
+                  Swal.close();
+                  location.reload();
+                } else {
+                  Swal.showValidationMessage('Error al guardar el costo');
+                }
+              })
+              .catch(error => {
+                Swal.showValidationMessage('Error al enviar el formulario: ' + error);
+              });
+            });
+    }
+
+    // Agrega el escuchador de eventos aquí, fuera de la función mostrarPopup()
+    document.getElementById('agregar-fijo').addEventListener('click', function() {
+      mostrarPopup();
+    });
+
+    
+    function mostrarPopupVariable() {
+      Swal.fire({
+        title: 'Agrega un costo variable',
+        html: `
+        <form id="formulario-costo-variable" method="POST" enctype="multipart/form-data" action="{% url 'nuevo_costo_variable' %}">
+            {% csrf_token %}
+            <div class="form-group">
+                <label for="nombreCostoVariable" class="custom-form-label">Nombre:</label>
+                <input type="text" name="nombre" class="form-control" id="nombreCostoVariable" placeholder="Nombre del costo" required>
+            </div>
+            <div class="form-group">
+                <label for="fechaCostoVariable" class="custom-form-label">Fecha:</label>
+                <input type="date" name="fecha" class="form-control" id="fechaCostoVariable" required>
+            </div>
+            <div class="form-group">
+                <label for="archivoCostoVariable" class="custom-form-label">Archivo:</label>
+                <div class="input-group">
+                    <div class="custom-file">
+                        <input type="file" name="archivo" class="custom-file-input" id="archivoCostoVariable" required>
+                        <label class="custom-file-label" for="archivoCostoVariable">Seleccionar archivo</label>
+                    </div>
+                </div>
+            </div>
+            <div class="form-group">
+                <label for="impuestoCostoVariable" class="custom-form-label">Impuesto ($):</label>
+                <input type="number" name="impuesto" class="form-control" id="impuestoCostoVariable" required>
+            </div>
+            <div class="form-group">
+                <label for="totalCostoVariable" class="custom-form-label">Total ($):</label>
+                <input type="number" name="total" class="form-control" id="totalCostoVariable" required>
+            </div>
+            <button type="submit" id="guardar-costo-variable" style="display: none;">Guardar</button>
+        </form>
+        
+              `,
+              showCancelButton: true,
+              confirmButtonText: 'Guardar Costo',
+              cancelButtonText: 'Cancelar',
+              preConfirm: () => {
+                document.getElementById('guardar-costo-variable').click();
+              },
+            });
+      
+            const formularioCostoVariable = document.getElementById('formulario-costo-variable');
+            formularioCostoVariable.addEventListener('submit', function(event) {
+              event.preventDefault();
+              const formData = new FormData(formularioCostoVariable);
+              fetch(formularioCostoVariable.action, {
+                method: formularioCostoVariable.method,
+                body: formData
+              })
+              .then(response => response.json())
+              .then(data => {
+                if (data.status === 'ok') {
+                  Swal.close();
+                  location.reload();
+                } else {
+                  Swal.showValidationMessage('Error al guardar el costo');
+                }
+              })
+              .catch(error => {
+                Swal.showValidationMessage('Error al enviar el formulario: ' + error);
+              });
+            });
+    }
+
+    document.getElementById('agregar-variable').addEventListener('click', function() {
+      mostrarPopupVariable();
+    });
+
+    function mostrarPopupBoleta() {
+        Swal.fire({
+          title: 'Agrega una boleta de honorario',
+          html: `
+          <form id="formulario-boleta" method="POST" enctype="multipart/form-data" action="{% url 'nueva_boleta' %}">
+            {% csrf_token %}
+            <div class="form-group">
+                <label for="numeroBoleta" class="custom-form-label">Número:</label>
+                <input type="number" name="numero" class="form-control" id="numeroBoleta" required>
+            </div>
+            <div class="form-group">
+                <label for="fechaBoleta" class="custom-form-label">Fecha:</label>
+                <input type="date" name="fecha" class="form-control" id="fechaBoleta" required>
+            </div>
+            <div class="form-group">
+                <label for="archivoBoleta" class="custom-form-label">Archivo:</label>
+                <div class="input-group">
+                    <div class="custom-file">
+                        <input type="file" name="archivo" class="custom-file-input" id="archivoBoleta" required>
+                        <label class="custom-file-label" for="archivoBoleta">Seleccionar archivo</label>
+                    </div>
+                </div>
+            </div>
+            <div class="form-group">
+                <label for="cantidadEvaluacionesBoleta" class="custom-form-label">Cantidad de Evaluaciones:</label>
+                <input type="number" name="cantidad_evaluaciones" class="form-control" id="cantidadEvaluacionesBoleta" required>
+            </div>
+            <div class="form-group">
+                <label for="retencionBoleta" class="custom-form-label">Retención ($):</label>
+                <input type="number" name="retencion" class="form-control" id="retencionBoleta" required>
+            </div>
+            <div class="form-group">
+                <label for="totalBoleta" class="custom-form-label">Total ($):</label>
+                <input type="number" name="total" class="form-control" id="totalBoleta" required>
+            </div>
+            <div class="form-group">
+                <label for="colaboradorBoleta" class="custom-form-label">Colaborador:</label>
+                <select name="colaborador" class="form-control" id="colaboradorBoleta" required>
+                    {% for colaborador in colaboradores %}
+                        <option value="{{ colaborador.id }}">{{ colaborador.nombre }} {{ colaborador.apellidop }}</option>
+                    {% endfor %}
+                </select>
+            </div>
+            <button type="submit" id="guardar-boleta" style="display: none;">Guardar</button>
+        </form>
+                `,
+                showCancelButton: true,
+                confirmButtonText: 'Guardar Boleta',
+                cancelButtonText: 'Cancelar',
+                preConfirm: () => {
+                  document.getElementById('guardar-boleta').click();
+                },
+              });
+        
+              const formularioBoleta = document.getElementById('formulario-boleta');
+              formularioBoleta.addEventListener('submit', function(event) {
+                event.preventDefault();
+                const formData = new FormData(formularioBoleta);
+                fetch(formularioBoleta.action, {
+                  method: formularioBoleta.method,
+                  body: formData
+                })
+                .then(response => response.json())
+                .then(data => {
+                  if (data.status === 'ok') {
+                    Swal.close();
+                    location.reload();
+                  } else {
+                    Swal.showValidationMessage('Error al guardar la boleta');
+                  }
+                })
+                .catch(error => {
+                  Swal.showValidationMessage('Error al enviar el formulario: ' + error);
+                });
+              });
+      }
+  
+      document.getElementById('agregar-boleta').addEventListener('click', function() {
+          mostrarPopupBoleta();
+      });
+
+      // Obtener todos los botones de eliminar
+      var botonesEliminar = document.getElementsByClassName('eliminar-button');
+
+      // Agregar el evento de clic a cada botón de eliminar
+      Array.from(botonesEliminar).forEach(function(boton) {
+          boton.addEventListener('click', function(event) {
+              event.preventDefault(); // Evitar el comportamiento predeterminado del enlace
+
+              var Id = this.dataset.id; // Obtener el ID del costo desde el atributo data-id
+
+              Swal.fire({
+                  title: 'Confirmar Eliminación',
+                  text: '¿Estás seguro de que deseas eliminar este Egreso?',
+                  icon: 'warning',
+                  showCancelButton: true,
+                  confirmButtonText: 'Eliminar',
+                  cancelButtonText: 'Cancelar',
+              }).then((result) => {
+                  if (result.isConfirmed) {
+                      // Continuar con la acción de eliminación
+                      window.location.href = this.href;
+                  }
+              });
+          });
+      });
+</script>
+
+
+{% endblock %}

@@ -1,0 +1,147 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    {% load static %}
+    <!-- Bootstrap -->
+    <link rel="stylesheet" href="{% static 'index/css/bootstrap.min.css' %}">
+    <script src="{% static 'index/js/bootstrap.bundle.min.js' %}"></script>
+
+    <!-- Estilos -->
+    <link href="{% static 'index/css/styles.css' %}" rel="stylesheet">
+    <script src="https://kit.fontawesome.com/8c7f8de33e.js" crossorigin="anonymous"></script>
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+
+    <!-- Alertas Emergentes -->
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@12.0.0"></script>
+
+    <!-- Movimiento barra de navegación -->
+    <script>
+        function toggleNavbar() {
+            var navbar = document.getElementById("navbar");
+            var content = document.getElementById("content");
+            var toggleButton = document.getElementById("toggle-button");
+            navbar.classList.toggle("active");
+            content.classList.toggle("active");
+            toggleButton.classList.toggle("active");
+        }
+    </script>
+
+    <style>
+        /* Add your custom CSS styles here */
+        .header-info {
+            display: flex;
+            align-items: center;
+            justify-content: flex-end;
+            gap: 20px;
+        }
+
+        .user-icon {
+            font-size: 24px;
+        }
+    </style>
+</head>
+
+<body>
+    <div id="navbar" class="navbar">
+        <nav class="navbar-nav">
+            <ul>
+                <li>
+                    <a class="nav-link" href="{% url 'home' %}" style="color: rgb(255, 187, 0);">
+                        <i class="fas fa-home" style="vertical-align: middle; margin-left: 20px; margin-right: 10px;"></i>
+                        <span style="vertical-align: middle;">Inicio</span>
+                    </a>
+                </li>
+                <li>
+                    <a class="nav-link" href="{% url 'Lista Cliente' %}" style="color: rgb(255, 187, 0);">
+                        <i class="fas fa-users" style="vertical-align: middle; margin-left: 20px; margin-right: 10px;"></i>
+                        <span style="vertical-align: middle;">Clientes</span>
+                    </a>
+                </li>
+                <li>
+                    <a class="nav-link" href="{% url 'Lista Servicio' %}" style="color: rgb(255, 187, 0);">
+                        <i class="fas fa-cogs" style="vertical-align: middle; margin-left: 20px; margin-right: 10px;"></i>
+                        <span style="vertical-align: middle;">Servicios</span>
+                    </a>
+                </li>
+
+                <li class="nav-item dropdown">
+                    <a class="nav-link dropdown-toggle" href="#" id="navbarDropdownMenuLink" role="button" data-bs-toggle="dropdown" aria-expanded="false" style="color: rgb(255, 187, 0);">
+                        <i class="fas fa-dollar-sign" style="vertical-align: middle; margin-left: 20px; margin-right: 10px;"></i>
+                        <span style="vertical-align: middle;">Finanzas</span>
+                    </a>
+                    <ul class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
+                        <li><a class="dropdown-item" href="{% url 'ingresof' %}">Ingresos</a></li>
+                        <li><a class="dropdown-item" href="{% url 'egresof' %}">Egresos</a></li>
+                        <li><a class="dropdown-item" href="{% url 'reporte' %}">Reportes</a></li>
+                    </ul>
+                </li>
+                
+                <li>
+                    <a class="nav-link" href="{% url 'listar_colaboradores' %}" style="color: rgb(255, 187, 0);">
+                        <i class="fas fa-user" style="vertical-align: middle; margin-left: 20px; margin-right: 10px;"></i>
+                        <span style="vertical-align: middle;">Colaboradores</span>
+                    </a>
+                </li>
+                <li>
+                    <a class="nav-link" href="#" style="color: rgb(255, 187, 0);">
+                        <i class="fas fa-school" style="vertical-align: middle; margin-left: 20px; margin-right: 10px;"></i>
+                        <span style="vertical-align: middle;">Colegios</span>
+                    </a>
+                </li>
+                <li>
+                    <a class="nav-link" href="{% url 'listar_usuarios' %}" style="color: rgb(255, 187, 0);">
+                        <i class="fas fa-shield-halved" style="vertical-align: middle; margin-left: 20px; margin-right: 10px;"></i>
+                        <span style="vertical-align: middle;">Seguridad</span>
+                    </a>
+                </li>
+            </ul>
+        </nav>
+    </div>
+
+    <div id="content" class="content">
+        <header class="header">
+            <div class="container">
+                <div class="row align-items-center">
+                    <div class="col-md-6">
+                        <div class="logo">
+                            <a title="InnovaPIE" href="{% url 'home' %}">
+                                <img src="{% static 'index/img/main_logo.png' %}" alt="InnovaPIE" />
+                            </a>
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="header-info">
+                            <h1 class="title">Bienvenido {{ user.username }}</h1>
+                            <div class="user-icon">
+                                <a href="{% url 'perfilusuario' %}" title="Perfil del usuario">
+                                    <i class="fas fa-user"></i>
+                                </a>
+                            </div>
+                            <!-- Agregando el ícono de cerrar sesión aquí -->
+                            <div class="logout-icon">
+                                <a href="{% url 'logout' %}" title="Cerrar sesión">
+                                    <i class="fas fa-sign-out-alt"></i>
+                                </a>                                
+                            </div>
+                        </div>                        
+                    </div>
+                </div>
+            </div>
+        </header>
+
+        <!-- Contenido Cambiante -->
+        {% block content %}
+
+        {% endblock %}
+    </div>
+
+    <button id="toggle-button" class="toggle-button" onclick="toggleNavbar()">
+        <span></span>
+        <span></span>
+        <span></span>
+    </button>
+
+</body>
+
+</html>

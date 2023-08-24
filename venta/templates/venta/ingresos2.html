@@ -1,0 +1,113 @@
+{% extends "index/base.html" %}
+
+{% load static %}
+
+{% load custom_filters %}
+
+{% block content %}
+<head>
+    <title>Ingresos</title>
+    <link href="https://fonts.googleapis.com/css2?family=Roboto+Slab:wght@700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="{% static 'index/css/styleingreso.css' %}">
+    <style>
+        .totals-container {
+            display: flex;
+            justify-content: space-around;
+            margin-bottom: 20px;
+        }
+        
+        .recuadrox {
+            display: flex;
+            flex-direction: column;
+            align-items: center; /* Alinea el texto horizontalmente en el centro */
+            justify-content: center; /* Alinea el texto verticalmente en el centro */
+            width: 250px;
+            height: 100px;
+            border-radius: 5px;
+            background-color: #47BFE9;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+            margin-top: 10px;
+            margin-right: 110px;
+            margin-left: 110px;
+        }
+
+        .recuadrox p {
+            font-size: 22px;  /* Ajusta este valor a lo que necesites */
+        }
+        
+    </style>
+</head>
+
+<body>
+    <a class="back-button" href="{% url 'venta'%}"><i class="fas fa-arrow-left"></i> Volver</a>
+
+    <div class="title-container">
+        <h1>Ingresos</h1>
+    </div>
+    <div class="monthpicker-container text-center">
+        <form method="POST" action="{% url 'ingresof' %}">
+            {% csrf_token %}
+            <label for="fecha">Fecha:</label>
+            <input type="month" id="fecha" name="fecha" value="{{ fecha_str }}">
+            <input type="submit" value="Filtrar">
+        </form>
+    </div>
+
+    <div class="totals-container">
+        <div class="recuadrox">
+            <h2>Total Facturado</h2>
+            <p>${{ total_factura|format_clp }}</p>
+        </div>
+        <div class="recuadrox" style="background-color: #72B62F;">
+            <h2>Total Pagado</h2>
+            <p>${{ total_pago|format_clp }}</p>
+        </div>
+    </div>
+    
+    <div class="flex-container">
+        <div class="contenidoreg">
+            <h2 class="form-register">Facturas/Boletas</h2>
+                <div class="search-container">
+                </div>
+                <div class="scrollable-table">
+                    <table id="tabla-pagos" class="cliente-table">
+                        <th class="cliente-column">Numero Factura</th>
+                        <th class="cliente-column">Fecha</th>
+                        <th class="cliente-column">Archivo Factura</th>
+                        <th class="cliente-column">Total ($)</th>
+                    </tr>
+                    {% for factura in facturas %}
+                    <tr class="cliente-row">
+                      <td class="cliente-column">{{ factura.numero_factura }}</td>
+                      <td class="cliente-column">{{ factura.fecha|date:"d/m/Y" }}</td>
+                      <td class="cliente-column">{{ factura.archivo }}</td>
+                      <td class="cliente-column" id="factura-total">{{ factura.total|format_clp }}</td>
+                    </tr>
+                    {% endfor %}
+                </table>
+            </div>
+            </div>
+
+        <div class="contenidoreg">
+            <h2 class="form-register">Pagos</h2>
+            <div class="scrollable-table">
+                <table id="tabla-pagos" class="cliente-table">
+                        <th class="cliente-column">Fecha</th>
+                        <th class="cliente-column">Archivo Transferencia</th>
+                        <th class="cliente-column">Pago ($)</th>
+                    </tr>
+                    {% for pago in pagos %}
+                    <tr class="cliente-row">
+                      <td class="cliente-column">{{ pago.fecha_hora|date:"d/m/Y" }}</td>
+                        <td class="cliente-column">{{ pago.archivo }}</td>
+                        <td class="cliente-column" id="pago-total">{{ pago.total|format_clp }}</td>
+                    </tr>
+                    {% endfor %}
+                </table>
+            </div>
+            </div>
+        </div>
+
+</body>
+
+{% endblock %}

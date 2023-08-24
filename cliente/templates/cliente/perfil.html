@@ -1,0 +1,431 @@
+{% extends "index/base.html" %}
+
+{% load static %}
+
+{% block content %}
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta http-equiv="X-UA-Compatible" content="ie=edge" />
+    <!--<title>Registration Form in HTML CSS</title>-->
+    <!---Custom CSS File--->
+    <link href="{% static 'index/css/stylecotizaventas.css' %}" rel="stylesheet">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@10"></script>
+
+
+
+
+
+    <style>
+        .modal {
+            display: none; /* Ocultar la ventana emergente por defecto */
+            position: fixed;
+            z-index: 1;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            overflow: auto;
+            background-color: rgba(0, 0, 0, 0.4); /* Fondo semi-transparente */
+        }
+
+        .modal-contenido {
+            background-color: #fefefe;
+            margin: 15% auto;
+            padding: 20px;
+            border: 1px solid #888;
+            width: 80%;
+            max-width: 400px;
+            border-radius: 5px;
+        }
+
+        .modal-boton {
+            display: inline-block;
+            padding: 10px 20px;
+            margin: 5px;
+            border: none;
+            background-color: #4CAF50;
+            color: #fff;
+            font-size: 16px;
+            cursor: pointer;
+            border-radius: 5px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+            transition: background-color 0.3s ease;
+        }
+
+        .modal-boton:hover {
+            background-color: #45a049;
+        }
+
+        .modal-boton-si {
+            background-color: #4CAF50;
+        }
+
+        .modal-boton-no {
+            background-color: #f44336;
+        }
+
+        .custom-button-container {
+        float: right;
+        text-align: right;
+        }
+
+        .gris {
+            background-color: grey;
+    </style>
+
+</head>
+
+<body>
+    
+    <div id="ventanaEmergente" class="modal">
+        <div class="modal-contenido">
+            <p>¿Estás seguro de querer enviar esa cotización?</p>
+            <button class="modal-boton modal-boton-si" onclick="enviarCotizacion()"><i class="fa-solid fa-paper-plane"></i></button>
+            <button class="modal-boton modal-boton-no" onclick="cerrarVentanaEmergente()"><i class="fa-solid fa-circle-xmark"></i></button>
+        </div>
+    </div>
+
+    <a class="back-button" href="{% url 'Lista Cliente'%}"><i class="fas fa-arrow-left"></i> Volver</a>
+
+    <div class="contenidocolegio">
+        <h2 class="form-register">Información del Colegio</h2>
+        
+        <table class="colegio-info">
+            <tr>
+                <th>Nombre:</th>
+                <td>{{ cliente.nombre }}</td>
+            </tr>
+            <tr>
+                <th>Correo:</th>
+                <td>{{ cliente.correo }}</td>
+            </tr>
+            <tr>
+                <th>Teléfono:</th>
+                <td>{{ cliente.telefono }}</td>
+            </tr>
+            <tr>
+                <th>Colegio:</th>
+                <td>{{ cliente.colegio }}</td>
+            </tr>
+            <tr>
+                <th>Tipo de Establecimiento:</th>
+                <td>{{ cliente.tipo_colegio }}</td>
+            </tr>
+            <tr>
+                <th>Dirección:</th>
+                <td>{{ cliente.direccion }}</td>
+            </tr>
+            <tr>
+                <th>Comuna:</th>
+                <td>{{ cliente.comuna }}</td>
+            </tr>
+        </table>
+    </div>
+    
+    <div class="contenidoreg">
+        <h2 class="form-register">Cotizaciones
+            <div class="custom-button-container">
+                <button class="form-register-button custom-button" onclick="toggleForm('cotizaciones')"><i class="fas fa-chevron-down"></i></button>
+            </div>
+        </h2>
+        <div id="cotizaciones-form" style="display: none;">
+            <div class="search-container">
+                <div></div>
+                <div class="center-button">
+                    <a class="botonagregar boton-agregar" href="{% url 'Select Serv' %}"><i class="fas fa-plus"></i></a>
+                </div>
+            </div>
+    
+        
+            <div class="cotizacion-container">
+                {% for cotizacion in cotizaciones %}
+                <div class="cotizacion-card">
+                  <div>
+                    {% if cotizacion.abierta %}
+                        <span class="color-dot" style="margin-right: 10px; background-color: #F6A400; display: inline-block; width: 10px; height: 10px; border-radius: 50%;"></span>
+                    {% elif cotizacion.rechazado %}
+                        <span class="color-dot" style="margin-right: 10px; background-color: #a7c2a8; display: inline-block; width: 10px; height: 10px; border-radius: 50%;"></span>
+                    {% elif cotizacion.cerrada %}
+                        <span class="color-dot" style="margin-right: 10px; background-color: #72B62F; display: inline-block; width: 10px; height: 10px; border-radius: 50%;"></span>
+                    {% else %}
+                        <span class="color-dot" style="margin-right: 10px; background-color: #3C78B9; display: inline-block; width: 10px; height: 10px; border-radius: 50%;"></span>
+                    {% endif %}
+                  </div>
+                  <div class="cotizacion-header">
+                    <div class="id-fecha-container">
+                      <div class="id-container">
+                        <span class="label">ID:</span>
+                        <span class="id">{{ cotizacion.id }}</span>
+                      </div>
+                      <div class="fecha-container">
+                        <span class="fecha">{{ cotizacion.fecha_hora|date:"d/m/Y" }}</span>
+                      </div>
+                    </div>
+                    <div class="botones-container">
+                      <div class="fila">
+                        <a href="{% url 'ver_cotizacion' cotizacion.id %}" class="accion-button ver-button"><i class="fas fa-eye"></i></a>
+                        {% if not cotizacion.aceptado and not cotizacion.rechazado %}
+                        <a href="{% url 'editar_cotizacion' cotizacion.id %}" class="accion-button editar-button"><i class="fas fa-edit"></i></a>
+                        {% endif %}
+                        {% if not cotizacion.aceptado and not cotizacion.rechazado %}
+                        <a  href="{% url 'rechazar_cotizacion' cotizacion.id %}" class="rechazar-button" onclick="confirmarRechazar(event)"><i class="fa-solid fa-xmark" href="{% url 'rechazar_cotizacion' cotizacion.id %}" onclick="confirmarRechazar(event)"></i></a>
+                        {% endif %}
+                      </div>
+                      <div class="fila">
+                        <a href="{% url 'ver_cotizacion' cotizacion.id %}" class="descargar-button" ><i class="fas fa-download"></i></a>
+                        {% if not cotizacion.aceptado and not cotizacion.rechazado %}
+                            {% if cotizacion.email_enviado == True %}
+                                <a href="{% url 'enviar_correo' cotizacion.id %}" class="accion-button mail-button gris" onclick="confirmarEnvioCorreo(event)"><i class="fa-solid fa-envelope" href="{% url 'enviar_correo' cotizacion.id %}" onclick="confirmarEnvioCorreo(event)"></i></a>
+                                {% else %}
+                                    <a href="{% url 'enviar_correo' cotizacion.id %}" class="accion-button mail-button" onclick="confirmarEnvioCorreo(event)"><i class="fa-solid fa-envelope" href="{% url 'enviar_correo' cotizacion.id %}" onclick="confirmarEnvioCorreo(event)"></i></a>
+                            {% endif %}    
+                        <a href="{% url 'aceptar_cotizacion' cotizacion.id %}" class="aceptar-button" onclick="confirmarAceptar(event)"><i class="fas fa-check" href="{% url 'aceptar_cotizacion' cotizacion.id %}" onclick="confirmarAceptar(event)"></i></a>
+                        {% endif %}
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                {% endfor %}
+              </div>
+              
+        </div>
+    </div>
+    
+
+    <div class="contenidoreg">
+        <h2 class="form-register">Ventas Abiertas
+            <div class="custom-button-container">
+                <button class="form-register-button custom-button" onclick="toggleForm('ventas_abiertas')"><i class="fas fa-chevron-down"></i></button>
+            </div>
+        </h2>
+        <div id="ventas_abiertas-form" style="display: none;">
+            <div class="search-container">
+                <div></div>
+            </div>
+            <div class="cotizacion-container">
+                {% for venta in ventas %}
+                {% if venta.abierta %}
+                <div class="cotizacion-card">
+                    <div>
+                        <span class="color-dot" style="margin-right: 10px; background-color: orange; display: inline-block; width: 10px; height: 10px; border-radius: 50%;"></span>
+                    </div>
+                    <div class="cotizacion-header">
+                        <div class="id-fecha-container">
+                            <div class="id-container">
+                                <span class="label">ID Venta:</span>
+                                <span class="id">{{ venta.id }}</span>
+                            </div>
+                            <div class="id-container">
+                                <span class="label">ID Cotización:</span>
+                                <span class="id">{{ venta.cotizacion.id }}</span>
+                            </div>
+                            <div class="fecha-container">
+                                <span class="fecha">{{ venta.fecha_hora }}</span>
+                            </div>
+                        </div>
+                        <div class="botones-container">
+                            <div class="fila">
+                                <a href="{% url 'Venta' venta.id%}" class="accion-button ver-button"><i class="fas fa-eye"></i></a>
+                                <a href="{% url 'cerrar_venta' venta.id %}" class="aceptar-button" onclick="cerrar_venta(event)"><i class="fas fa-check" href="{% url 'cerrar_venta' venta.id %}" onclick="cerrar_venta(event)"></i></a>
+                                <a href="{% url 'editar_venta' venta.id %}" class="accion-button editar-button"><i class="fas fa-edit"></i></a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                {% endif %}
+                {% endfor %}
+            </div>
+        </div>
+    </div>
+    
+
+    <div class="contenidoreg">
+        <h2 class="form-register">Ventas Cerrada
+            <div class="custom-button-container">
+                <button class="form-register-button custom-button" onclick="toggleForm('ventas_cerradas')"><i class="fas fa-chevron-down"></i></button>
+            </div>
+        </h2>
+        <div id="ventas_cerradas-form" style="display: none;">
+            <div class="search-container">
+                <div></div>
+            </div>
+            <div class="cotizacion-container">
+                {% for venta in ventas %}
+                {% if venta.cerrada %}
+                <div class="cotizacion-card">
+                    <div>
+                        <span class="color-dot" style="margin-right: 10px; background-color: green; display: inline-block; width: 10px; height: 10px; border-radius: 50%;"></span>
+                    </div>
+                    <div class="cotizacion-header">
+                        <div class="id-fecha-container">
+                            <div class="id-container">
+                                <span class="label">ID Venta:</span>
+                                <span class="id">{{ venta.id }}</span>
+                            </div>
+                            <div class="id-container">
+                                <span class="label">ID Cotización:</span>
+                                <span class="id">{{ venta.cotizacion.id }}</span>
+                            </div>
+                            <div class="fecha-container">
+                                <span class="fecha">{{ venta.fecha_hora }}</span>
+                            </div>
+                        </div>
+                        <div class="botones-container">
+                            <div class="fila">
+                                <a href="{% url 'Venta_cerrada' venta.id %}" class="accion-button ver-button"><i class="fas fa-eye"></i></a>
+                                {% if venta.estado_encuesta == True %}
+                                    <a href="{% url 'enviar_encuesta' venta.id %}" class="accion-button mail-button gris"><i class="fa-solid fa-envelope" href="{% url 'enviar_correo' venta.cotizacion.id %}"></i></a>
+                                {% else %}
+                                    <a href="{% url 'enviar_encuesta' venta.id %}" class="accion-button mail-button"><i class="fa-solid fa-envelope" href="{% url 'enviar_correo' venta.cotizacion.id %}"></i></a>
+                                {% endif %}    
+                            </div>
+
+                        </div>
+                    </div>
+                </div>
+                {% endif %}
+                {% endfor %}
+            </div>
+        </div>
+    </div>
+</body>
+
+
+<script>
+
+    function goBack() {
+        window.history.back();
+    }
+
+    function toggleForm(formName) {
+        var form = document.getElementById(formName + '-form');
+        if (form.style.display === 'none') {
+            form.style.display = 'block';
+        } else {
+            form.style.display = 'none';
+        }
+    }
+
+   
+    function descargarOtraVista(event) {
+    event.preventDefault(); // Evita el comportamiento predeterminado del enlace
+
+    var button = event.target.closest('.descargar-button');
+    if (button) {
+        var idCotizacion = button.getAttribute('data-id');
+        var url = 'cotizacion/' + idCotizacion;
+
+        // Realizar una solicitud AJAX al servidor para obtener el contenido HTML de la otra vista
+        $.ajax({
+            url: url,
+            method: 'GET',
+            success: function(response) {
+                response = '<style>* { margin: 0 !important; padding: 0 !important; }</style>' + response;
+                // Generar el PDF con el contenido obtenido de la otra vista
+                html2pdf().set({
+                    html2canvas: { scale: 2 },   // Ajustar el scale
+                    format: [595.28, 841.89],   // Especificar dimensiones
+                    margin: 10,                 // Ajustar el margen
+                    orientation: 'portrait'     // Cambiar orientación si es necesario
+                }).from(response).save("vista.pdf");
+            },
+            error: function(error) {
+                console.log('Error al obtener el contenido de la otra vista:', error);
+            }
+        });
+    }
+}
+
+    
+    // Aceptar o rechazar cotizacion
+    function confirmarRechazar(event) {
+        event.preventDefault(); // Evitar el comportamiento predeterminado del enlace
+    
+        var url = event.target.getAttribute('href');
+        var button = event.target.closest('.rechazar-button');
+        Swal.fire({
+          title: 'Confirmar Rechazo',
+          text: '¿Estás seguro de que deseas rechazar esta cotización?',
+          icon: 'warning',
+          showCancelButton: true,
+          confirmButtonText: 'Rechazar',
+          cancelButtonText: 'Cancelar',
+        }).then((result) => {
+          if (result.isConfirmed) {
+            // Continuar con la acción de rechazar
+            window.location.href = url;
+          }
+        });
+      }
+    
+    function confirmarAceptar(event) {
+        event.preventDefault(); // Evitar el comportamiento predeterminado del enlace
+
+        var url = event.target.getAttribute('href');
+        var button = event.target.closest('.aceptar-button');
+        Swal.fire({
+            title: 'Confirmar Aceptación',
+            text: '¿Estás seguro de que deseas aceptar esta cotización?',
+            icon: 'warning',
+            showCancelButton: true,
+            confirmButtonText: 'Aceptar',
+            cancelButtonText: 'Cancelar',
+        }).then((result) => {
+            if (result.isConfirmed) {
+                // Continuar con la acción de aceptar
+                window.location.href = url;
+            }
+        });
+    }
+
+    function confirmarEnvioCorreo(event) {
+        event.preventDefault();
+        
+        var url = event.target.getAttribute('href');
+        var button = event.target.closest('.mail-button');
+        Swal.fire({
+            title: 'Confirmar Envío',
+            text: '¿Estás seguro de que deseas enviar este correo?',
+            icon: 'warning',
+            showCancelButton: true,
+            confirmButtonText: 'Enviar',
+            cancelButtonText: 'Cancelar',
+        }).then((result) => {
+            if (result.isConfirmed) {
+                if (url !== null) {
+                    window.location.href = url;
+                } else {
+                    console.error('La URL es nula o no está definida correctamente.');
+                }
+            }
+        });
+    }
+
+    function cerrar_venta(event) {
+        event.preventDefault(); // Evitar el comportamiento predeterminado del enlace
+    
+        var url = event.target.getAttribute('href');
+        var button = event.target.closest('.rechazar-button');
+        Swal.fire({
+          title: 'Venta Cerrada',
+          text: '¿Estás seguro de que deseas cerrar esta venta?',
+          icon: 'warning',
+          showCancelButton: true,
+          confirmButtonText: 'Aceptar',
+          cancelButtonText: 'Cancelar',
+        }).then((result) => {
+          if (result.isConfirmed) {
+            // Continuar con la acción de rechazar
+            window.location.href = url;
+          }
+        });
+      }
+
+</script>
+
+
+{% endblock %}

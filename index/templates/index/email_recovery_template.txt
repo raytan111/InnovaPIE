@@ -1,0 +1,12 @@
+Hola {{ user }},
+
+Recibimos una solicitud para restablecer tu contraseña en nuestro portal.
+
+Para restablecer tu contraseña, haz clic en el siguiente enlace:
+
+http://{{ domain }}/reset-password/{{ uid }}/{{ token }}/
+
+Si no hiciste esta solicitud, por favor ignora este correo.
+
+Gracias,
+El equipo de InnovaPIE

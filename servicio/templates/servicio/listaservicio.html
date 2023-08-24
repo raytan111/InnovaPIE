@@ -1,0 +1,93 @@
+{% extends "index/base.html" %}
+
+{% load static %}
+
+{% load custom_filters %}
+
+{% block content %}
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta http-equiv="X-UA-Compatible" content="ie=edge" />
+    <!--<title>Registration Form in HTML CSS</title>-->
+    <!---Custom CSS File--->
+    <link href="{% static 'index/css/styleslistacliente.css' %}" rel="stylesheet">
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@10"></script>
+
+</head>
+
+
+
+<body>
+    <a class="back-button" href="{% url 'home'%}"><i class="fas fa-arrow-left"></i> Volver</a>
+    <div class="contenidoreg">
+        <h2 class="form-register">Listado de Servicios</h2>
+        
+        <table class="cliente-table">
+            <tr class="cliente-header">
+                <th class="cliente-column">Codigo</th>
+                <th class="cliente-column">Descripción</th>
+                <th class="cliente-column">Precio</th>
+                <th class="cliente-column">Profesional</th>
+                <th class="cliente-column">Acciones</th>
+            </tr>
+
+            {% for s in servicio %}
+            <tr class="cliente-row">
+                <td class="cliente-column">{{ s.codigo }}</td>
+                <td class="cliente-column">{{ s.descripcion }}</td>
+                <td class="cliente-column">${{ s.precio|format_clp }}</td>
+                <td class="cliente-column">{{ s.profesional }}</td>
+                <td class="cliente-column">
+                    <a href="{% url 'Editar Servicio' s.id %}" class="accion-button editar-button"><i class="fas fa-edit"></i></a>
+                    <a style="color: white; background-color: #d60e0e;" href="{% url 'eliminar_servicio' s.id %}" data-id="{{ s.id }}" id="eliminar-btn-{{ s.id }}" class="eliminar-button"><i class="fas fa-trash"></i></a>
+                </td>
+            </tr>
+            {% endfor %}
+        </table>
+        
+        <div class="center-button">
+            <a class="botonagregar boton-agregar" href="{% url 'Registro Servicio' %}"><i class="fas fa-plus"></i></a>
+        </div>
+    </div>
+
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+<script>
+    function goBack() {
+        window.history.back();
+    }
+
+    // Obtener todos los botones de eliminar
+    var botonesEliminar = document.getElementsByClassName('eliminar-button');
+
+    // Agregar el evento de clic a cada botón de eliminar
+    Array.from(botonesEliminar).forEach(function(boton) {
+      boton.addEventListener('click', function(event) {
+        event.preventDefault(); // Evitar el comportamiento predeterminado del enlace
+
+        var servicioId = this.dataset.id; // Obtener el ID del servicio desde el atributo data-id
+
+        Swal.fire({
+          title: 'Confirmar Eliminación',
+          text: '¿Estás seguro de que deseas eliminar este servicio?',
+          icon: 'warning',
+          showCancelButton: true,
+          confirmButtonText: 'Eliminar',
+          cancelButtonText: 'Cancelar',
+        }).then((result) => {
+          if (result.isConfirmed) {
+            // Continuar con la acción de eliminación
+            window.location.href = this.href; // Redirigir a la URL del enlace original
+          }
+        });
+      });
+    });
+</script>
+
+</body>
+
+{% endblock %}

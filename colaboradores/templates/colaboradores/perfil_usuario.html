@@ -1,0 +1,190 @@
+{% extends "index/base.html" %}
+
+{% load static %}
+
+{% block content %}
+
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Perfil usuario</title>
+    <link href="{% static 'index/css/stylesperfiluser.css' %}" rel="stylesheet">
+    <link rel="stylesheet" type="text/css" href="https://necolas.github.io/normalize.css/8.0.1/normalize.css">
+    <link rel="stylesheet" href="https://pro.fontawesome.com/releases/v5.10.0/css/all.css" integrity="sha384-AYmEC3Yw5cVb3ZcuHtOA93w35dYTsvhLPVnYs9eStHfGJvOvKxVfELGroGkvsg+p" crossorigin="anonymous" />
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@10"></script>
+</head>
+
+<body>
+
+
+
+    <section class="seccion-perfil-usuario">
+        <div class="perfil-usuario-header">
+            <div class="perfil-usuario-portada">
+                <h1>INNOVAPIE</h1>
+                <div class="perfil-usuario-avatar">
+                    <img src="{{ perfil_usuario.foto.url }}" alt="img-avatar">
+                </div>
+                <a href="{% url 'editar_perfil_usuario' id=usuario.id %}" class="boton-portada">
+                    <i class="far fa-user"></i> Editar Perfil
+                </a>
+            </div>
+        </div>
+            <div class="perfil-usuario-body">
+                <div class="perfil-usuario-bio">
+                    <h3 class="titulo">{{ perfil_usuario.nombre }} {{ perfil_usuario.apellidop }} {{ perfil_usuario.apellidom }}</h3>
+                    <div class="contenedor-padre">
+                        <p class="texto">{{ perfil_usuario.descripcion }}</p>
+                      </div>
+                </div>
+                <div class="perfil-usuario-footer">
+                    <h3 class="titulo">Datos del Trabajador</h3>
+                    <ul class="lista-datos">
+                        <li><i class="icono fas fa-map-signs"></i> {{ perfil_usuario.direccion }}</li>
+                        <li><i class="icono fas fa-phone-alt"></i> {{ perfil_usuario.telefono }}</li>
+                        <li><i class="icono fas fa-envelope"></i>{{ perfil_usuario.correo }}</li>
+                        <li><i class="icono fas fa-briefcase"></i>{{ perfil_usuario.profesion }}</li>
+                        <li><i class="icono fas fa-calendar-alt"></i>{{ perfil_usuario.fecha_nacimiento }}</li>
+                    </ul>
+                    <ul class="lista-datos">
+                        <li><i class="icono fas fa-map-marker-alt"></i>{{ perfil_usuario.comuna }}</li>
+                        <li><i class="icono fas fa-id-card"></i>{{ perfil_usuario.rut }}</li>
+                        <li><i class="icono fa-solid fa-kit-medical"></i>{{ perfil_usuario.nombre_emergencia }}</li>
+                        <li><i class="icono fa-solid fa-phone-volume"></i>{{ perfil_usuario.contacto_emergencia }}</li>
+                        <li><i class="icono fa-solid fa-user-group"></i>{{ perfil_usuario.parentesco_emergencia }}</li>
+                    </ul>
+
+                    
+                </div>
+                
+                <div class="perfil-usuario-footer">
+                    <h3 class="titulo">Datos de Transferencia</h3>
+                    <ul class="lista-datos">
+                        <li><i class="icono fas fa-map-marker-alt"></i>Nombre: {{ datos_transferencia.d_nombre }}</li>
+                        <li><i class="icono fas fa-id-card"></i>RUT: {{ datos_transferencia.d_rut }}</li>
+                        <li><i class="icono fas fa-envelope"></i>Correo: {{ datos_transferencia.d_correo }}</li>
+                    </ul>
+                    <ul class="lista-datos">
+                        <li><i class="icono fas fa-university"></i>Banco: {{ datos_transferencia.d_banco }}</li>
+                        <li><i class="icono fas fa-credit-card"></i>Tipo de cuenta: {{ datos_transferencia.d_tipo_cuenta }}</li>
+                        <li><i class="icono fas fa-sort-numeric-up"></i>Número de cuenta: {{ datos_transferencia.d_numero_cuenta }}</li>
+                    </ul>
+                </div>
+
+            </div>
+
+            
+        <div class="contenidoreg">
+            <h2 class="form-register" style="display: flex; justify-content: space-between; align-items: center;">
+                <div style="flex: 1;">
+                    Documentación del Trabajador
+                </div>
+                <div class="custom-button-container">
+                    <button class="form-register-button custom-button" onclick="toggleForm('documentos')"><i class="fas fa-chevron-down"></i></button>
+                </div>
+            </h2>
+            
+            <div id="documentos-form" style="display: none;">
+                <div class="search-container">
+                    <div class="center-button">
+                        <a id="botonAgregar" class="botonagregar boton-agregar" href="#" onclick="mostrarPopup2()"><i class="fas fa-plus"></i></a>
+                    </div>
+                </div>
+
+                <table class="cliente-table">
+                    <tr class="cliente-header">
+                        <th class="cliente-column">Nombre</th> 
+                        <th class="cliente-column">Archivo</th>   
+                        <th class="cliente-column">Comentarios</th>             
+                        <th class="cliente-column">Acciones</th>
+                    </tr>
+
+                    {% for documento in documentos %}
+                        <tr class="cliente-row">
+                            <td class="cliente-column">{{ documento.nombre }}</td>
+                            <td class="cliente-column">{{ documento.archivo }}</td>
+                            <td class="cliente-column">{{ documento.descripcion }}</td>
+                            <td class="cliente-column">
+                                <a style="color: white; background-color: #d60e0e;" href="#" class="eliminar-button"><i class="fas fa-trash"></i></a>
+                                <a href="{% url 'descargar_documento' documento_id=documento.id %}" class="accion-button descargar-button"><i class="fas fa-download"></i></a>
+                            </td>
+                        </tr>
+                    {% endfor %}
+                </table>
+            </div>    
+        </section>
+
+</body>
+
+<script>
+    function toggleForm(formName) {
+        var form = document.getElementById(formName + '-form');
+        if (form.style.display === 'none') {
+            form.style.display = 'block';
+        } else {
+            form.style.display = 'none';
+        }
+    }
+
+    function mostrarPopup2() {
+        Swal.fire({
+          title: 'Completa los campos solicitados',
+          html: `
+            <form id="formulario-documento" method="POST" enctype="multipart/form-data" action="{% url 'nuevo_documento' perfil_usuario.id %}">
+              {% csrf_token %}
+      
+              <div class="form-group">
+                <label for="nombreInput" class="custom-form-label">Nombre del Documento:</label>
+                <input type="text" name="nombre" class="form-control" id="nombreInput" placeholder="Nombre del documento" required>
+              </div>
+      
+              <div class="form-group">
+                <label for="archivoInput" class="custom-form-label">Archivo:</label>
+                <div class="input-group">
+                  <div class="custom-file">
+                    <input type="file" name="archivo" class="custom-file-input" id="archivoInput" required>
+                    <label class="custom-file-label" for="archivoInput"><i class="fas fa-upload"></i> Seleccionar archivo</label>
+                  </div>
+                </div>
+              </div>
+      
+              <div class="form-group">
+                <label for="descripcionInput" class="custom-form-label">Descripción:</label>
+                <textarea name="descripcion" class="form-control" id="descripcionInput" placeholder="Descripción" required></textarea>
+              </div>
+      
+              <button type="submit" id="guardar-documento" style="display: none;">Guardar</button>
+            </form>
+          `,
+          iconHtml: '<i class="material-icons green-icon">description</i>',
+          showCancelButton: true,
+          confirmButtonText: 'Guardar Documento',
+          cancelButtonText: 'Cancelar',
+          customClass: {
+            popup: 'swal2-custom-popup',
+            confirmButton: 'swal2-custom-confirm-button',
+            cancelButton: 'swal2-custom-cancel-button',
+          },
+          preConfirm: () => {
+            document.getElementById('guardar-documento').click();
+          },
+          didOpen: () => {
+            const inputFile = document.getElementById('archivoInput');
+            const fileLabel = document.querySelector('.custom-file-label');
+      
+            inputFile.addEventListener('change', () => {
+              const fileName = inputFile.files[0].name;
+              fileLabel.textContent = fileName;
+            });
+          },
+        });
+      }
+
+</script>
+
+</html>
+
+{% endblock %}

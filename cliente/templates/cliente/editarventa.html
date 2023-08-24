@@ -1,0 +1,77 @@
+{% extends "index/base.html" %}
+
+{% load static %}
+
+{% block content %}
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta http-equiv="X-UA-Compatible" content="ie=edge" />
+    <!--<title>Registration Form in HTML CSS</title>-->
+    <!---Custom CSS File--->
+    <link href="{% static 'index/css/styleselect.css' %}" rel="stylesheet">
+    <script src="https://kit.fontawesome.com/8c7f8de33e.js" crossorigin="anonymous"></script>
+    
+</head>
+
+<body>
+    <button class="back-button" onclick="goBack()"><i class="fas fa-arrow-left"></i> Volver</button>
+    <div class="contenidoreg">
+        <h2 class="form-register">Edita los servicios a cotizar</h2>
+        
+        
+        
+        <br> <!-- Espacio agregado -->
+        
+        <form action="{% url 'editar_cotizacion' cotizacion.id%}" method="POST">
+            {% csrf_token %}
+            <a>{{cotizacion.fecha_hora}}</a>
+            <table class="cliente-table">
+                <tr class="cliente-header">
+                    <th class="cliente-column">Codigo</th>
+                    <th class="cliente-column">Descripción</th>
+                    <th class="cliente-column">Precio</th>
+                    <th class="cliente-column">Profesional</th>
+                    <th class="cliente-column">Cantidad</th>
+                    <th class="cliente-column">Descuentos</th>
+                </tr>
+
+                {% for s in servicio %}
+                    <tr class="cliente-row">
+                        <td class="cliente-column">{{ s.codigo }}</td>
+                        <td class="cliente-column">{{ s.descripcion }}</td>
+                        <td class="cliente-column">{{ s.precio }}</td>
+                        <td class="cliente-column">{{ s.profesional }}</td>
+                        {% for d in detalle %}
+                            {% if d.servicio.id == s.id %}
+                                <td class="cliente-column">
+                                    <input type="number" name="cantidad_{{ s.id }}" value='{{ d.cantidad }}' min="0" max="1000">
+                                </td>
+                                <td class="cliente-column">
+                                    <input type="number" name="descuento_{{ s.id }}" value='{{ d.descuento }}' min="0">
+                                </td>
+                            {% endif %}
+                        {% endfor %}
+                    </tr>
+                {% endfor %}
+            </table>
+
+        <div class="descuento-container">
+            <p style="font-weight: bold;">Descuento al total</p>
+            <input type="number" name="descuento2" value="{{ cotizacion.descuento }}" min="0" class="estilo-input">
+        </div>
+        <div class="boton-container">
+            <button type="submit" class="botonagregar boton-agregar"><i class="fa-solid fa-floppy-disk"></i></button>
+        </div>
+    </div>
+
+
+</body>
+<script>
+    function goBack() {
+        window.history.back();
+    }
+</script>
+{% endblock %}
+

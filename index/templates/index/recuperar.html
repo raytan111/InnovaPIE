@@ -1,0 +1,59 @@
+{% extends "index/base.html" %}
+
+{% load static %}
+
+{% block content %}
+    <style>
+        body {
+            background: #007bff;
+            background: linear-gradient(to right, #ffffff, #aaabb1, #b6b7c4);
+        }
+
+        .bg {
+            background-image: url("{% static 'index/img/imghome.png' %}");
+            background-position: center;
+        }
+    </style>
+
+    <div class="container w-75 bg-primary mt-5 rounded shadow">
+        <div class="row align-items-stretch">
+            <div class="col bg d-none d-lg-block col-md-5 col-lg-5 col-xl-6 rounded"></div>
+            <div class="col bg-white p-5 rounded-end">
+                <div class="text-end">
+                    <img src="{% static 'index/img/logomini.jpg' %}" width="40" alt="">
+                </div>
+
+                <h2 class="fw-bold text-center py-5">Recuperación de Contraseña</h2>
+                <p class="text-center">Ingresa tu dirección de correo electrónico y te enviaremos instrucciones para restablecer tu contraseña.</p>
+
+                <!-- Bloque para mostrar mensajes -->
+                {% if messages %}
+                    <ul class="messages">
+                        {% for message in messages %}
+                            <li{% if message.tags %} class="{{ message.tags }}"{% endif %}>{{ message }}</li>
+                        {% endfor %}
+                    </ul>
+                {% endif %}
+
+                <!-- Formulario de recuperación de contraseña -->
+                <form action="{% url 'recuperar_clave' %}" method="post">
+                    {% csrf_token %}
+                    <div class="mb-4">
+                        <label for="email" class="form-label">Correo Electrónico</label>
+                        <input type="email" class="form-control" name="email" required>
+                    </div>
+                
+                    <div class="d-grid">
+                        <button type="submit" class="btn btn-primary">Enviar Instrucciones</button>
+                    </div>
+                </form>
+
+                <div class="mt-3">
+                    <span>¿Recuerdas tu contraseña? <a href="{% url 'login' %}">Iniciar Sesión</a></span>
+                </div>
+                
+            </div>
+        </div>
+    </div>
+
+{% endblock %}

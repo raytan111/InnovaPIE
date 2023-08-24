@@ -1,0 +1,82 @@
+{% extends "index/base.html" %}
+
+{% load static %}
+
+{% block content %}
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta http-equiv="X-UA-Compatible" content="ie=edge" />
+    <!--<title>Registration Form in HTML CSS</title>-->
+    <!---Custom CSS File--->
+    <link href="{% static 'index/css/stylesregcliente.css' %}" rel="stylesheet">
+    <script src="https://kit.fontawesome.com/8c7f8de33e.js" crossorigin="anonymous"></script>
+</head>
+
+
+
+    <body>
+    
+        <div class="contenidoreg">
+        <section class="containeres">
+            <header>Editar Cliente</header>
+            
+            <form action="" method="POST" class="form">
+              {% csrf_token %}
+
+              <div class="input-box">
+                  <label>Tipo de Colegio</label>
+                  {{ form.tipo_colegio }}
+              </div>
+
+        
+              <div class="input-box">
+                <label>Nombre</label>
+                {{ form.nombre }}
+              </div>
+        
+              <div class="input-box">
+                <label>E-Mail</label>
+                {{ form.correo }}  
+              </div>
+        
+              <div class="input-box">
+                <label>Nro Teléfono</label>
+                {{ form.telefono }}   
+              </div>
+        
+              <div class="input-box">
+                <label>Colegio</label>
+                {{ form.colegio }}
+              </div>
+        
+              <div class="input-box address">
+                <label>Dirección</label>
+                {{ form.direccion }}  
+              </div>
+        
+              <div class="input-box address">
+                <label>Ciudad</label>
+                {{ form.ciudad }} 
+              </div>
+        
+              <div class="input-box address">
+                <label>Comuna</label>
+                {{ form.comuna }}
+              </div>
+        
+              <button class="botonguardar" type="submit">Guardar</button>
+            </form>
+        </section>
+        
+        </div>  
+    </body>
+
+<style>
+    h2{
+        text-align: center; font-weight: bold
+    }
+</style>
+
+{% endblock %}

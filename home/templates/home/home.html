@@ -1,0 +1,92 @@
+{% extends "index/base.html" %}
+
+{% load static %}
+
+{% block content %}
+    <head>
+	    <title>Inicio</title>
+	    <link rel="stylesheet" href="{% static 'index/css/stylehome.css' %}">
+	    <style>
+	        #titulo {
+	            background-image: url("{% static 'index/img/fondo-titulo.jpg' %}");
+	            background-size: cover;
+	            background-position: center;
+				background-color: #d6d4cb60;
+	            padding: 50px;
+	            color: #242c5e;
+	            text-align: center;
+	            margin: 0 auto;
+				border-radius: 5%;
+	            max-width: 900px;
+	        }
+	        
+	        #titulo h1 {
+	            font-size: 3em;
+	            font-weight: bold;
+	            margin-bottom: 20px;
+	            text-shadow: 2px 2px 6px rgba(0, 0, 0, 0.8);
+	        }
+	        
+	        #titulo p {
+	            font-size: 1.5em;
+	            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.8);
+	        }
+	    </style>
+    </head>
+
+    <body>
+	
+	    <div id="titulo">
+		    <h1>Bienvenido al Portal de InnovaPIE</h1>
+		    <p>Selecciona la función a la que quieras acceder</p>	
+	    </div>
+
+	    <header class="menuopciones">
+		
+		    <div class="contenedor" id="uno">
+			    <a href="{% url 'Lista Cliente' %}">
+			        <img class="icon" src="https://images.vexels.com/media/users/3/132335/isolated/preview/4af43ce1082231cba5e5aa60fbb03f2f-iconos-de-circulo-de-personal.png">
+			        <p class="texto">Clientes</p>
+			    </a>
+		    </div>
+
+		    <div class="contenedor" id="dos">
+			    <a href="{% url 'Lista Servicio' %}">
+			        <img class="icon" src="https://storage.googleapis.com/wzukusers/user-31693553/images/5ae44c3853d422f9d6tm/icono-servicios.png">
+			        <p class="texto">Servicios</p>
+			    </a>
+		    </div>
+
+		    <div class="contenedor" id="tres">
+			    <a href="{% url 'venta' %}">
+			        <img class="icon" src="https://www.pngmart.com/files/7/Finance-PNG-Free-Download.png">
+			        <p class="texto">Finanzas</p>
+			    </a>
+		    </div>
+
+		    <div class="contenedor" id="cuatro">
+			    <a href="{% url 'listar_colaboradores' %}">
+			        <img class="icon" src="https://cdn.icon-icons.com/icons2/1465/PNG/512/154manofficeworker2_100459.png">
+			        <p class="texto">Colaboradores</p>
+			    </a>
+		    </div>
+
+		    <div class="contenedor" id="cinco">
+			    <a href="#">
+			        <img class="icon" src="https://static.vecteezy.com/system/resources/previews/001/200/363/non_2x/school-png.png">
+			        <p class="texto">Colegios</p>
+			    </a>
+		    </div>
+
+			<div class="contenedor" id="siete">
+			    <a href="{% url 'listar_usuarios' %}">
+			        <img class="icon" src="https://images.vexels.com/media/users/3/128728/isolated/preview/4979f424070de1dbf7055d91695b74c3-icono-plano-de-candado-de-seguridad.png">
+			        <p class="texto">Seguridad</p>
+			    </a>
+		    </div>
+
+	    </header>
+
+    </body>
+
+{% endblock %}

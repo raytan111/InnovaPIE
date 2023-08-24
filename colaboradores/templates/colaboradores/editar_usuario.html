@@ -1,0 +1,174 @@
+{% extends "index/base.html" %}
+
+{% load static %}
+
+{% block content %}
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta http-equiv="X-UA-Compatible" content="ie=edge" />
+    <!--<title>Formulario de Registro en HTML CSS</title>-->
+    <!---Archivo CSS Personalizado--->
+    <link href="{% static 'index/css/styleeditarusuario.css' %}" rel="stylesheet">
+    
+  
+    <style>
+        .form-row {
+        display: flex;
+        flex-wrap: wrap;
+        justify-content: space-between;
+        margin-bottom: 10px;
+        }
+
+        .input-box {
+            flex-basis: 48%; /* Ajusta este valor según tus necesidades */
+            /* Otros estilos para los campos de entrada */
+        }
+
+        .profesion-box select {
+        margin-top: 8px;
+        width: 100%;
+        height: 50px; /* o el valor que desees */
+        box-sizing: border-box; 
+        }
+    </style>
+    
+</head>
+
+<body>
+    <button class="back-button" onclick="goBack()"><i class="fas fa-arrow-left"></i> Volver</button>
+
+    <div class="contenidoreg">
+
+        <section class="containeres">
+
+            <header>Datos del Trabajador</header>            
+            <form action="" method="POST" class="form" enctype="multipart/form-data">
+                {% csrf_token %}
+ 
+                <!-- Primera fila -->
+                <div class="form-row">
+                    <div class="input-box">
+                        <label>Foto de perfil</label>
+                        {{ perfil_form.foto }}
+                    </div>
+                    <div class="input-box">
+                        <label>RUT</label>
+                        {{ perfil_form.rut }}
+                    </div>
+                    <div class="input-box">
+                        <label>Nombre</label>
+                        {{ perfil_form.nombre }}
+                    </div>
+                    <div class="input-box">
+                        <label>Apellido Paterno</label>
+                        {{ perfil_form.apellidop }}
+                    </div>
+                </div>
+
+                <!-- Segunda fila -->
+                <div class="form-row">
+                    <div class="input-box">
+                        <label>Apellido Materno</label>
+                        {{ perfil_form.apellidom }}
+                    </div>
+                    <div class="input-box">
+                        <label>Dirección</label>
+                        {{ perfil_form.direccion }}
+                    </div>
+                    <div class="input-box">
+                        <label>Comuna</label>
+                        {{ perfil_form.comuna }}
+                    </div>
+                    <div class="input-box">
+                        <label>Correo</label>
+                        {{ perfil_form.correo }}
+                    </div>
+                </div>
+
+                <!-- Tercera fila -->
+                <div class="form-row">
+                    <div class="input-box">
+                        <label>Teléfono</label>
+                        {{ perfil_form.telefono }}
+                    </div>
+                    <div class="input-box profesion-box">
+                        <label>Profesión</label>
+                        {{ perfil_form.profesion }}
+                    </div>
+                    
+                    <div class="input-box">
+                        <label>Descripción</label>
+                        {{ perfil_form.descripcion }}
+                    </div>
+                    <div class="input-box">
+                        <label>Fecha de Nacimiento</label>
+                        {{ perfil_form.fecha_nacimiento }}
+                    </div>
+                </div>
+                <header class= "tit" >Datos de Emergencia</header>
+                <!-- Cuarta fila -->
+                <div class="form-row">
+                    <div class="input-box">
+                        <label>Nombre de Emergencia</label>
+                        {{ perfil_form.nombre_emergencia }}
+                    </div>
+                    <div class="input-box">
+                        <label>Contacto de Emergencia</label>
+                        {{ perfil_form.contacto_emergencia }}
+                    </div>
+                </div>
+
+                <!-- Quinta fila -->
+                <div class="form-row">
+                    <div class="input-box">
+                        <label>Parentesco de Emergencia</label>
+                        {{ perfil_form.parentesco_emergencia }}
+                    </div>
+                </div>
+                <header class= "tit" >Datos de Transferencia</header>
+                <!-- Sexta fila (campos del segundo formulario) -->
+                <div class="form-row">
+                    <div class="input-box">
+                        <label>Nombre</label>
+                        {{ datos_transferencia_form.d_nombre }}
+                    </div>
+                    <div class="input-box">
+                        <label>RUT</label>
+                        {{ datos_transferencia_form.d_rut }}
+                    </div>
+                    <div class="input-box">
+                        <label>Correo</label>
+                        {{ datos_transferencia_form.d_correo }}
+                    </div>
+                </div>
+
+                <!-- Séptima fila (campos del segundo formulario) -->
+                <div class="form-row">
+                    <div class="input-box">
+                        <label>Banco</label>
+                        {{ datos_transferencia_form.d_banco }}
+                    </div>
+                    <div class="input-box">
+                        <label>Tipo de Cuenta</label>
+                        {{ datos_transferencia_form.d_tipo_cuenta }}
+                    </div>
+                    <div class="input-box">
+                        <label>Número de Cuenta</label>
+                        {{ datos_transferencia_form.d_numero_cuenta }}
+                    </div>
+                </div>
+
+                <div class="button-container">
+                    <button type="submit">Guardar</button>
+                </div>
+            </form>
+        </section>
+    </div>
+</body>
+<script>
+    function goBack() {
+        window.history.back();
+    }
+</script>
+{% endblock %}

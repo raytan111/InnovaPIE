@@ -1,0 +1,97 @@
+{% extends "index/base.html" %}
+
+{% load static %}
+
+{% load custom_filters %}
+
+{% block content %}
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta http-equiv="X-UA-Compatible" content="ie=edge" />
+    <!--<title>Registration Form in HTML CSS</title>-->
+    <!---Custom CSS File--->
+    <link href="{% static 'index/css/styleselect.css' %}" rel="stylesheet">
+    <script src="https://kit.fontawesome.com/8c7f8de33e.js" crossorigin="anonymous"></script>
+    
+    <style>
+
+        .estilo-input {
+            padding: 8px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            font-size: 14px;
+            /* Agrega otros estilos según tus preferencias */
+        }
+        
+        .descuento-container {
+            text-align: center;
+            margin-top: 10px;
+        }
+        
+        .descuento-container p {
+            margin-top: 0;
+        }
+        
+        .boton-container {
+            text-align: right;
+            margin-top: 20px;
+        }
+    </style>
+</head>
+
+<body>
+    <a class="back-button" href="{% url 'Perfil'%}"><i class="fas fa-arrow-left"></i> Volver</a>
+    <div class="contenidoreg">
+        <h2 class="form-register">Selecciona los servicios a cotizar</h2>
+        
+        <br> <!-- Espacio agregado -->
+        
+        <form action="{% url 'crear_cotizacion'%}" method="POST">
+            {% csrf_token %}
+
+            <table class="cliente-table">
+                <tr class="cliente-header">
+                    <th class="cliente-column">Codigo</th>
+                    <th class="cliente-column">Descripción</th>
+                    <th class="cliente-column">Precio</th>
+                    <th class="cliente-column">Profesional</th>
+                    <th class="cliente-column">Cantidad</th>
+                    <th class="cliente-column">Descuentos</th>
+                </tr>
+
+                {% for s in servicio %}
+                <tr class="cliente-row">
+                    <td class="cliente-column">{{ s.codigo }}</td>
+                    <td class="cliente-column">{{ s.descripcion }}</td>
+                    <td class="cliente-column">${{ s.precio|format_clp }}</td>
+                    <td class="cliente-column">{{ s.profesional }}</td>
+                    <td class="cliente-column">
+                        <input type="number" name="cantidad_{{ s.id }}" value="0" min="0" max="1000" class="estilo-input" required>
+                    </td>
+                    <td class="cliente-column">
+                        <input type="number" name="descuento_{{ s.id }}" value="0" min="0" class="estilo-input" required>
+                    </td>
+                </tr>
+                {% endfor %}
+            </table>
+            
+            <div class="descuento-container">
+                <p style="font-weight: bold;">Descuento al total</p>
+                <input type="number" name="descuento" value="0" min="0" class="estilo-input" required>
+            </div>
+            
+            <div class="boton-container">
+                <button type="submit" class="botonagregar boton-agregar"><i class="fa-solid fa-floppy-disk"></i></button>
+            </div>
+        </form>
+
+    </div>
+</body>
+<script>
+    function goBack() {
+        window.history.back();
+    }
+</script>
+{% endblock %}

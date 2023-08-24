@@ -1,0 +1,134 @@
+{% extends "index/base.html" %}
+
+{% load static %}
+
+{% block content %}
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta http-equiv="X-UA-Compatible" content="ie=edge" />
+    <!--<title>Registration Form in HTML CSS</title>-->
+    <!---Custom CSS File--->
+    <link href="{% static 'index/css/styleslistacliente.css' %}" rel="stylesheet">
+    <link href="{% static 'index/css/stylesbuscarcliente.css' %}" rel="stylesheet">
+    <script src="https://kit.fontawesome.com/8c7f8de33e.js" crossorigin="anonymous"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+
+
+    <style>
+        .search-container {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 10px;
+        }
+
+        .search-bar {
+            margin-right: 10px;
+        }
+
+        .center-button {
+            display: flex;
+            align-items: center;
+        }
+
+        .accion-button {
+            display: inline-block;
+            margin-right: 5px;
+        }
+
+        .eliminar-form {
+            display: inline-block;
+        }
+
+        .back-button {
+            display: inline-block;
+            margin-right: 10px;
+            padding: 5px 10px;
+            background-color: #0099ff;
+            color: #000000;
+            border: 1px solid #000000;
+            border-radius: 5px;
+            text-decoration: none;
+            font-size: 16px;
+            transition: background-color 0.3s ease;
+            margin-top: 25px;
+        }
+
+        .back-button:hover {
+            background-color: #000000;
+            color: #ffffff;
+        }
+    </style>
+
+</head>
+
+<body>
+    <a class="back-button" href="{% url 'home'%}"><i class="fas fa-arrow-left"></i> Volver</a>
+    <div class="contenidoreg">
+        <h2 class="form-register">Lista de Colaboradores</h2>
+
+        <div class="search-container">
+            <div>
+                <input id="search-bar" class="search-bar" type="text" placeholder="Buscar Colaboradores" oninput="searchClients()">
+                <button id="search-button" class="search-button"><i class="fas fa-search"></i></button>
+            </div>
+            <div class="center-button">
+                <a class="botonagregar boton-agregar" href="{% url 'registrar_usuario' %}"><i class="fas fa-plus"></i></a>
+            </div>
+        </div>
+
+        <table class="cliente-table">
+            <tr class="cliente-header">
+                <th class="cliente-column">Nombre</th>
+                <th class="cliente-column">Rut</th>
+                <th class="cliente-column">Profesión</th>
+                <th class="cliente-column">Correo</th>
+                <th class="cliente-column">Acciones</th>
+            </tr>
+
+            {% for c in perfil %}
+                <tr class="cliente-row">
+                    <td class="cliente-column">{{ c.nombre }} {{ c.apellidop }}</td>
+                    <td class="cliente-column">{{ c.rut }}</td>
+                    <td class="cliente-column">{{ c.profesion }}</td>
+                    <td class="cliente-column">{{ c.correo }}</td>
+                    <td class="cliente-column">
+                        <a href="{% url 'perfil_usuario' id=c.usuario.id %}" class="accion-button seleccionar-button"><i class="fas fa-eye"></i></a>
+                    </td>
+                </tr>
+            {% endfor %}
+        </table>
+
+
+</body>
+
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11.0.18"></script>
+    <script>
+        function goBack() {
+            window.history.back();
+        }
+
+
+    function searchClients() {
+    var input = document.getElementById("search-bar").value.toLowerCase();
+    var rows = document.getElementsByClassName("cliente-row");
+
+    for (var i = 0; i < rows.length; i++) {
+        var columns = rows[i].getElementsByClassName("cliente-column");
+        var nombre = columns[0].textContent.toLowerCase();
+        var rut = columns[1].textContent.toLowerCase();  // Rut en la segunda columna
+        var profesion = columns[2].textContent.toLowerCase();  // Profesión en la tercera columna
+
+        if (nombre.includes(input) || rut.includes(input) || profesion.includes(input)) {
+            rows[i].style.display = "";
+        } else {
+            rows[i].style.display = "none";
+        }
+    }
+}
+</script>
+
+
+{% endblock %}

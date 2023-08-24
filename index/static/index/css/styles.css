@@ -1,0 +1,192 @@
+/* Header */
+.header {
+  background-color: #242c5e;
+  padding: 20px 0; /* Ajusta el valor de padding según preferencia */
+}
+
+.logo img {
+  width: 100px; /* Ajusta el tamaño del logo según preferencia */
+  height: auto;
+}
+
+.title {
+  color: #fff;
+  font-size: 24px; /* Ajusta el tamaño de la fuente del título según preferencia */
+  font-weight: bold;
+  margin-bottom: 10px; /* Ajusta el margen inferior según preferencia */
+}
+
+.subtitle {
+  color: #fff;
+  font-size: 16px; /* Ajusta el tamaño de la fuente de los subtítulos según preferencia */
+  margin-bottom: 20px; /* Ajusta el margen inferior según preferencia */
+}
+
+.btn-primary {
+  background-color: #fff;
+  color: #007bff;
+  font-weight: bold;
+  padding: 8px 16px; /* Ajusta el tamaño del botón según preferencia */
+  border-radius: 5px;
+  text-decoration: none;
+  font-size: 14px; /* Ajusta el tamaño de la fuente del botón según preferencia */
+  
+}
+
+.btn-primary:hover {
+  background-color: #e3e3e3;
+}
+
+.contact-info p {
+  display: inline-block;
+  margin-right: 20px;
+  color: #fff;
+}
+
+.contact-info i {
+  margin-right: 5px;
+}
+
+.contact-info .contact-label {
+  color: #fff;
+}
+
+
+/* Barra de Navegación */
+body {
+  overflow-x: hidden; /* Evita que el contenido se desplace horizontalmente al desplegar la barra de navegación */
+}
+
+.navbar{
+  position: fixed;
+  top: 0;
+  left: -250px; /* La barra de navegación está oculta por defecto */
+  width: 250px;
+  height: 100vh;
+  background-color: #242c5e;
+  transition: left 0.3s ease; /* Agrega una animación de transición suave */
+}
+
+.navbar.active {
+  left: 0; /* La barra de navegación se muestra cuando tiene la clase "active" */
+}
+
+.nav-link:hover {
+  margin-left: 40px; /* Mueve el enlace hacia la derecha */
+  color: rgb(255, 166, 0); /* Cambia el color del texto al pasar el mouse por encima */
+}
+
+
+.navbar-brand {
+  margin-bottom: 20px;
+}
+
+.navbar-nav .nav-link {
+  width: 100%;
+  text-align: center;
+  font-weight: bold;
+  font-size: 20px; /* Ajusta el tamaño de fuente según tus preferencias */
+}
+
+.content {
+  padding: 20px;
+  transition: margin-left 0.3s ease; /* Agrega una animación de transición suave para el contenido */
+}
+
+.content.active {
+  margin-left: 250px; /* Desplaza el contenido hacia la derecha cuando la barra de navegación está activa */
+}
+
+.navbar-nav ul {
+  list-style: none; /* Elimina los estilos predeterminados de la lista */
+  padding: 0;
+  margin: 0;
+}
+
+.navbar-nav li {
+  margin-bottom: 10px; /* Espacio entre cada opción de navegación */
+}
+
+.navbar-nav li a {
+  display: flex; /* Permite alinear verticalmente el icono y el texto */
+  align-items: center; /* Alinea verticalmente los elementos */
+}
+
+/* Estilos para el botón de desplegar/cerrar */
+.toggle-button {
+  position: fixed;
+  top: 45px;
+  left: 45px;
+  z-index: 200;
+  width: 40px;
+  height: 30px;
+  background-color: rgb(255, 166, 0);;
+  border: none;
+  border-radius: 10%;
+  cursor: pointer;
+}
+
+.toggle-button span {
+  display: block;
+  width: 25px;
+  height: 3px;
+  background-color: #000000;
+  margin-bottom: 5px;
+  transition: background-color 0.3s ease;
+}
+
+.toggle-button.active span:nth-child(1) {
+  transform: translateY(8px) rotate(45deg);
+}
+
+.toggle-button.active span:nth-child(2) {
+  opacity: 0;
+}
+
+.toggle-button.active span:nth-child(3) {
+  transform: translateY(-8px) rotate(-45deg);
+}
+
+.logout-icon {
+  margin-left: 15px; /* Espacio entre el ícono de usuario y el de cerrar sesión */
+  font-size: 24px;
+}
+
+.logout-icon a {
+  color: #fff; /* Color del ícono. Puedes cambiarlo según tus necesidades */
+}
+
+.logout-icon a:hover {
+  color: #e3e3e3; /* Color al pasar el mouse por encima. Puedes cambiarlo según tus necesidades */
+}
+
+
+.dropdown-menu {
+  background-color: #242c5e;
+  border: none;
+  margin-top: 10px;
+  box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+}
+
+.dropdown-item {
+  color: rgb(255, 187, 0);
+  font-weight: bold;
+  font-size: 18px; /* Ajusta el tamaño de la fuente según tus preferencias */
+  padding: 8px 20px;
+  display: flex;
+  align-items: center;
+}
+
+.dropdown-item:hover {
+  color: rgb(255, 166, 0);
+  background-color: transparent;
+  margin-left: 20px;
+}
+
+.navbar-nav .nav-link:hover .dropdown-menu {
+  display: block;
+}
+
+.nav-item.dropdown:hover .dropdown-toggle::after {
+  vertical-align: 0.255em; /* Ajusta la posición del ícono de desplegar */
+}

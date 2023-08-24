@@ -1,0 +1,417 @@
+{% extends "index/base.html" %}
+
+{% load static %}
+
+{% load custom_filters %}
+
+{% block content %}
+<head>
+    <link href="{% static 'index/css/stylepagos.css' %}" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@10"></script>
+</head>
+
+
+
+<body>
+
+  <a class="eye-button" href="{% url 'ver_venta' venta.cotizacion.id %}">
+    <i class="far fa-eye"></i>
+  </a>
+    <a class="back-button" href="{% url 'Perfil'%}"><i class="fas fa-arrow-left"></i> Volver</a>
+
+
+    <div class="venta-container">
+      <div class="venta-info">
+        <div class="id-venta">
+          {{ venta.id }}
+        </div>
+        <div class="saludo-container">
+          <i class="fas fa-school logo"></i>
+          <div class="nombre-container">
+            <h2 class="comuno">{{cliente.colegio}}</h2>
+          </div>
+          <h2 class="comuno">{{cliente.comuna}}</h2>
+        </div>
+      </div>
+    </div>
+    
+
+    <div class="fila">
+        <div class="filados">
+            <div class="recuadrox cotizacion">
+                <i class="fas fa-chart-line"></i>
+                <h2>{{venta.cotizacion.id}}</h2>
+                <p>ID Cotización</p>
+            </div>
+
+            <div class="recuadrox precio">
+                <i class="fas fa-dollar-sign"></i>
+                <h2 id="totalPrecio">{{venta.total}}</h2>
+                <p>Precio</p>
+            </div>
+
+            <div class="recuadrox deuda">
+                <i class="fas fa-exclamation-triangle"></i>
+                <h2 id="deudaTotal">Pendiente: ${{venta.deuda}}</h2>
+                <p>Deuda</p>
+            </div>
+        </div>
+    </div>
+
+    
+      
+      <div class="contenidoreg">
+        <h2 class="form-register">Facturas
+            <div class="custom-button-container">
+                <button class="form-register-button custom-button" onclick="toggleForm('facturas')"><i class="fas fa-chevron-down"></i></button>
+            </div>
+        </h2>
+        <div id="facturas-form" style="display: none;">
+            <div class="search-container">
+                <div>
+                </div>
+                <div class="center-button">
+                  <a id="agregar-factura" class="botonagregar boton-agregar" href="#"><i class="fas fa-plus"></i></a>
+                </div>
+            </div>
+            <table id="tabla-facturas" class="cliente-table">
+                <tr class="cliente-header">
+                    <th class="cliente-column">Numero Factura</th>
+                    <th class="cliente-column">Fecha</th>
+                    <th class="cliente-column">Archivo Factura</th>
+                    <th class="cliente-column">Total ($)</th>
+                    <th class="cliente-column">Acciones</th>
+                </tr>
+                {% for factura in facturas %}
+                <tr class="cliente-row">
+                  <td class="cliente-column">{{ factura.numero_factura }}</td>
+                  <td class="cliente-column">{{ factura.fecha|date:"d/m/Y" }}</td>
+                  <td class="cliente-column">{{ factura.archivo }}</td>
+                  <td class="cliente-column" id="factura-total">{{ factura.total }}</td>
+                    <td class="cliente-column">
+                        <a style="color: white; background-color: #d60e0e;" href="{% url 'eliminar_factura' factura.id %}" data-id="{{ factura.id }}" id="eliminar-btn-{{ factura.id }}" class="accion-button eliminar-button"><i class="fas fa-trash"></i></a>
+                        <a href="{% url 'descargar_factura' factura_id=factura.id %}" class="accion-button descargar-button"><i class="fas fa-download"></i></a>
+                        {% if factura.factura_enviada == True %}
+                          <a href="{% url 'enviar_factura' factura.id %}" class="accion-button gris mail-button gris" style="background-color: grey" ><i class="fa-solid fa-envelope" href="{% url 'enviar_factura' factura.id %}"></i></a>
+                        {% else %}
+                          <a href="{% url 'enviar_factura' factura.id %}" class="accion-button mail-button" ><i class="fa-solid fa-envelope" href="{% url 'enviar_factura' factura.id %}"></i></a>
+                        {% endif %}
+                      </td>
+                </tr>
+                {% endfor %}
+            </table>
+        </div>
+    </div>
+    
+
+      <div class="contenidoreg">
+        <h2 class="form-register">
+            Pagos
+            <div class="custom-button-container">
+                <button class="form-register-button custom-button" onclick="toggleForm('pagos')"><i class="fas fa-chevron-down"></i></button>
+            </div>
+        </h2>
+        <div id="pagos-form" style="display: none;">
+            <div class="search-container">
+                <div></div>
+                <div class="center-button">
+                  <a id="agregar-pago" class="botonagregar boton-agregar" href="#"><i class="fas fa-plus"></i></a>
+
+                </div>
+            </div>
+            <table id="tabla-pagos" class="cliente-table">
+                <tr class="cliente-header">
+                    <th class="cliente-column">Fecha</th>
+                    <th class="cliente-column">Archivo Transferencia</th>
+                    <th class="cliente-column">Pago ($)</th>
+                    <th class="cliente-column">Acciones</th>
+                </tr>
+                {% for pago in pagos %}
+                <tr class="cliente-row">
+                  <td class="cliente-column">{{ pago.fecha_hora|date:"d/m/Y" }}</td>
+                    <td class="cliente-column">{{ pago.archivo }}</td>
+                    <td class="cliente-column" id="pago-total">{{ pago.total }}</td>
+                    <td class="cliente-column">
+                      <a style="color: white; background-color: #d60e0e;" href="{% url 'eliminar_pago' pago.id %}" data-id="{{ pago.id }}" id="eliminar-btn-{{ pago.id }}" class="accion-button eliminar-button"><i class="fas fa-trash"></i></a>
+                        <a href="{% url 'descargar_pago' pago_id=pago.id %}" class="accion-button descargar-button"><i class="fas fa-download"></i></a>
+                        
+                    </td>
+                </tr>
+                {% endfor %}
+            </table>
+        </div>
+    </div>
+    
+
+
+<script>
+    function goBack() {
+        window.history.back();
+    }
+
+    function toggleForm(formName) {
+        var form = document.getElementById(formName + '-form');
+        if (form.style.display === 'none') {
+            form.style.display = 'block';
+        } else {
+            form.style.display = 'none';
+        }
+    }
+
+    // Función para Agregar Pago
+    function mostrarPopup1() {
+      Swal.fire({
+        title: 'Añade el archivo de la transferencia y el monto del pago',
+        html: `
+          <!-- Aquí puedes colocar tu formulario -->
+          <form id="formulario-pago" method="POST" enctype="multipart/form-data" action="{% url 'nuevo_pago' venta.id %}">
+              {% csrf_token %}
+              <!-- Agrega los campos necesarios para el nuevo pago -->
+              <div class="form-group">
+                <label for="archivoInput" class="custom-form-label">Archivo Transferencia:</label>
+                <div class="input-group">
+                  <div class="custom-file">
+                    <input type="file" name="archivo" class="custom-file-input" id="archivoInput" required>
+                    <label class="custom-file-label" for="archivoInput"><i class="fas fa-upload"></i> Seleccionar archivo</label>
+                  </div>
+                </div>
+              </div>
+              <div class="form-group">
+                <label for="pagoInput" class="custom-form-label">Monto del pago:</label>
+                <input type="number" name="total" id="pagoInput" class="form-control" placeholder="Total" required>
+              </div>
+              <!-- ...otros campos del formulario... -->
+              <button type="submit" id="guardar-pago" style="display: none;">Guardar</button>
+          </form>
+        `,
+        iconHtml: '<i class="material-icons green-icon">attach_money</i>', // Cambiar el icono predeterminado por el ícono de dinero
+        showCancelButton: true,
+        confirmButtonText: 'Guardar pago',
+        cancelButtonText: 'Cancelar',
+        customClass: {
+          popup: 'swal2-custom-popup',
+          confirmButton: 'swal2-custom-confirm-button',
+          cancelButton: 'swal2-custom-cancel-button',
+        },
+        preConfirm: () => {
+          document.getElementById('guardar-pago').click(); // Simular el clic en el botón "Guardar" del formulario
+        },
+        didOpen: () => {
+          const inputFile = document.getElementById('archivoInput');
+          const fileLabel = document.querySelector('.custom-file-label');
+
+          inputFile.addEventListener('change', () => {
+            const fileName = inputFile.files[0].name;
+            fileLabel.textContent = fileName;
+          });
+        },
+      });
+
+      // Obtener el formulario del pop-up y enviarlo manualmente al hacer clic en "Guardar"
+      const formularioPago = document.getElementById('formulario-pago');
+      formularioPago.addEventListener('submit', function(event) {
+        event.preventDefault(); // Evitar el envío automático del formulario
+
+        const formData = new FormData(formularioPago); // Crear un objeto FormData con los datos del formulario
+
+        fetch(formularioPago.action, {
+          method: formularioPago.method,
+          body: formData
+        })
+          .then(response => {
+            if (response.ok) {
+              // Pago guardado exitosamente, puedes realizar acciones adicionales si es necesario
+              Swal.close(); // Cerrar el pop-up
+              location.reload(); // Actualizar la página o realizar alguna otra acción
+            } else {
+              // Ocurrió un error al guardar el pago, puedes mostrar un mensaje de error si lo deseas
+            }
+          })
+          .catch(error => {
+            console.error('Error al enviar el formulario:', error);
+          });
+      });
+    }
+
+    // Asignar el evento clic al botón
+    document.getElementById('agregar-pago').addEventListener('click', function() {
+      mostrarPopup1();
+    });
+
+//Botones de eliminar
+var botonesEliminar = document.getElementsByClassName('eliminar-button');
+
+// Agregar el evento de clic a cada botón de eliminar
+Array.from(botonesEliminar).forEach(function(boton) {
+  boton.addEventListener('click', function(event) {
+    event.preventDefault(); // Evitar el comportamiento predeterminado del enlace
+
+    var servicioId = this.dataset.id; // Obtener el ID del servicio desde el atributo data-id
+
+    Swal.fire({
+      title: 'Confirmar Eliminación',
+      text: '¿Estás seguro de que deseas eliminar este archivo?',
+      icon: 'warning',
+      showCancelButton: true,
+      confirmButtonText: 'Eliminar',
+      cancelButtonText: 'Cancelar',
+    }).then((result) => {
+      if (result.isConfirmed) {
+        // Continuar con la acción de eliminación
+        window.location.href = this.href; // Redirigir a la URL del enlace original
+      }
+    });
+  });
+});
+
+
+
+// Función para Agregar Factura
+function mostrarPopup2() {
+  Swal.fire({
+    title: 'Completa los campos solicitados',
+    html: `
+      <!-- Aquí puedes colocar tu formulario -->
+      <form id="formulario-factura" method="POST" enctype="multipart/form-data" action="{% url 'nueva_factura' venta.id %}">
+        {% csrf_token %}
+        <!-- Agrega los campos necesarios para la nueva factura -->
+
+        <div class="form-group">
+          <label for="numeroFacturaInput" class="custom-form-label">Número de Factura:</label>
+          <input type="number" name="numero_factura" class="form-control" placeholder="Número de factura" required>
+        </div>
+        <div class="form-group">
+          <label for="fechaInput" class="custom-form-label">Fecha:</label>
+          <input type="date" name="fecha" class="form-control" placeholder="Fecha" required>
+        </div>
+        <div class="form-group">
+          <label for="archivoInput" class="custom-form-label">Archivo Factura:</label>
+          <div class="input-group">
+            <div class="custom-file">
+              <input type="file" name="archivo" class="custom-file-input" id="archivoInput" required>
+              <label class="custom-file-label" for="archivoInput"><i class="fas fa-upload"></i> Seleccionar archivo</label>
+            </div>
+          </div>
+        </div>
+        <div class="form-group">
+          <label for="pagoInput" class="custom-form-label">Total ($):</label>
+          <input type="number" name="total" class="form-control" placeholder="Total" required>
+        </div>
+        <!-- ...otros campos del formulario... -->
+        <button type="submit" id="guardar-factura" style="display: none;">Guardar</button>
+      </form>
+    `,
+    iconHtml: '<i class="material-icons green-icon">description</i>',
+    showCancelButton: true,
+    confirmButtonText: 'Guardar Factura',
+    cancelButtonText: 'Cancelar',
+    customClass: {
+      popup: 'swal2-custom-popup',
+      confirmButton: 'swal2-custom-confirm-button',
+      cancelButton: 'swal2-custom-cancel-button',
+    },
+    preConfirm: () => {
+      document.getElementById('guardar-factura').click(); // Simular el clic en el botón "Guardar" del formulario
+    },
+    didOpen: () => {
+      const inputFile = document.getElementById('archivoInput');
+      const fileLabel = document.querySelector('.custom-file-label');
+
+      inputFile.addEventListener('change', () => {
+        const fileName = inputFile.files[0].name;
+        fileLabel.textContent = fileName;
+      });
+    },
+  });
+
+  // Obtener el formulario del pop-up y enviarlo manualmente al hacer clic en "Guardar"
+  const formularioFactura = document.getElementById('formulario-factura');
+  formularioFactura.addEventListener('submit', function(event) {
+    event.preventDefault(); // Evitar el envío automático del formulario
+
+    const formData = new FormData(formularioFactura); // Crear un objeto FormData con los datos del formulario
+    const totalFactura = formData.get('total');
+
+    // Eliminar el botón de envío del formulario del objeto FormData
+    formData.delete('guardar-factura');
+
+    fetch(formularioFactura.action, {
+      method: formularioFactura.method,
+      body: formData
+    })
+      .then(response => {
+        if (response.ok) {
+          // Factura guardada exitosamente, puedes realizar acciones adicionales si es necesario
+          Swal.close(); // Cerrar el pop-up
+          location.reload(); // Actualizar la página o realizar alguna otra acción
+        } else {
+          // Ocurrió un error al guardar la factura, puedes mostrar un mensaje de error si lo deseas
+        }
+      })
+      .catch(error => {
+        console.error('Error al enviar el formulario:', error);
+      });
+  });
+}
+
+// Asignar el evento clic al botón
+document.getElementById('agregar-factura').addEventListener('click', function() {
+  mostrarPopup2();
+});
+
+  // Obtén el elemento del total
+  const totalElement = document.getElementById('totalPrecio');
+
+  // Obtén el valor del total sin el signo $
+  const totalValue = parseFloat(totalElement.textContent.slice(0));
+
+  // Aplica la función toLocaleString() con el idioma 'es-CL' para agregar el separador de miles y el formato de moneda chilena
+  const formattedTotal = totalValue.toLocaleString('es-CL', { style: 'currency', currency: 'CLP' });
+
+  // Asigna el resultado formateado al elemento del total
+  totalElement.textContent = formattedTotal;
+
+
+  // Obtén el elemento del total
+  const deudaElement = document.getElementById('deudaTotal');
+
+  // Obtén el valor de la deuda sin el signo $
+  const deudaValue = parseFloat(deudaElement.textContent.slice(12)); // 11 es la longitud de la cadena "Pendiente: $"
+
+  // Aplica la función toLocaleString() con el idioma 'es-CL' para agregar el separador de miles y el formato de moneda chilena
+  const formattedDeuda = deudaValue.toLocaleString('es-CL', { style: 'currency', currency: 'CLP' });
+
+  // Asigna el resultado formateado al elemento de la deuda
+  deudaElement.textContent = `Pendiente: ${formattedDeuda}`;
+
+  // asignar punto a factura y pago 
+
+  // Formatear los valores de la tabla de facturas
+  var elementosFacturas = document.querySelectorAll('#tabla-facturas .cliente-column:nth-child(4)');
+
+  elementosFacturas.forEach(function(elemento) {
+    var valor = parseFloat(elemento.textContent);
+
+    if (!isNaN(valor)) {
+      elemento.textContent = new Intl.NumberFormat("es-CL", { style: "currency", currency: "CLP" }).format(valor);
+    }
+  });
+
+  // Formatear los valores de la tabla de pagos
+  var elementosPagos = document.querySelectorAll('#tabla-pagos .cliente-column:nth-child(3)');
+
+  elementosPagos.forEach(function(elemento) {
+    var valor = parseFloat(elemento.textContent);
+
+    if (!isNaN(valor)) {
+      elemento.textContent = new Intl.NumberFormat("es-CL", { style: "currency", currency: "CLP" }).format(valor);
+    }
+  });
+
+  
+
+</script>
+</body>
+{% endblock %}
+
+

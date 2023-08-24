@@ -1,0 +1,58 @@
+{% extends "index/base.html" %}
+
+{% load static %}
+
+{% block content %}
+    <style>
+        body {
+            background: #007bff;
+            background: linear-gradient(to right, #ffffff, #aaabb1, #b6b7c4);
+        }
+
+        .bg {
+            background-image: url(static/index/img/imghome.png);
+            background-position: center;
+        }
+    </style>
+
+    <div class="container w-75 bg-primary mt-5 rounded shadow">
+        <div class="row align-items-stretch">
+            <div class="col bg d-none d-lg-block col-md-5 col-lg-5 col-xl-6 rounded"></div>
+            <div class="col bg-white p-5 rounded-end">
+                <div class="text-end">
+                    <img src="static/index/img/logomini.jpg" width="40" alt="">
+                </div>
+
+                <h2 class="fw-bold text-center py-5">Bienvenido al Portal InnovaPIE</h2>
+                <!-- Inicio de sesión -->
+
+                <form action="{% url 'login' %}" method="post">
+                    {% csrf_token %}
+                    <div class="mb-4">
+                        <label for="text" class="form-label">Usuario</label>
+                        <input type="text" class="form-control" name="User">
+                    </div>
+                    <div class="mb-4">
+                        <label for="password" class="form-label">Contraseña</label>
+                        <input type="password" class="form-control" name="Contraseña">
+                    </div>
+                
+                    <div class="d-grid">
+                        <button type="submit" class="btn btn-primary">Iniciar Sesión</button>
+                    </div>
+                
+                    <div class="my-3">
+                        <span>¿Olvidaste tu contraseña? <a href="{% url 'recuperar_clave' %}">Recuperar contraseña</a></span>
+                    </div>
+                
+                    {% if error_message %}
+                    <p class="text-danger">{{ error_message }}</p>
+                    {% endif %}
+                </form>
+                
+            </div>
+        </div>
+        
+    </div>
+
+{% endblock %}

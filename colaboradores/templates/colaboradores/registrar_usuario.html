@@ -1,0 +1,108 @@
+{% extends "index/base.html" %}
+{% load static %}
+
+{% block content %}
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta http-equiv="X-UA-Compatible" content="ie=edge" />
+    <!--<title>Registration Form in HTML CSS</title>-->
+    <!---Custom CSS File--->
+    <link href="{% static 'index/css/stylesregusuario.css' %}" rel="stylesheet">
+</head>
+<style>
+    .back-button {
+        display: inline-block;
+        margin-right: 10px;
+        padding: 5px 10px;
+        background-color: #ffffff;
+        color: #000000;
+        border: 1px solid #000000;
+        border-radius: 5px;
+        text-decoration: none;
+        font-size: 16px;
+        transition: background-color 0.3s ease;
+    }
+
+    .back-button:hover {
+        background-color: #000000;
+        color: #ffffff;
+    }
+
+    /* Style for the input-box class */
+.input-box {
+  margin-bottom: 20px;
+}
+
+/* Style for the label */
+.input-box label {
+  display: block;
+  margin-bottom: 5px;
+  font-weight: bold;
+}
+
+/* Style for the select element (dropdown) */
+.input-box select {
+  width: 50%;
+  padding: 10px;
+  font-size: 16px;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+  background-color: #f8f8f8;
+  /* Add custom arrow to the select dropdown */
+  background-image: url("path/to/arrow-icon.png");
+  background-repeat: no-repeat;
+  background-position: right 10px center;
+  /* Styling the appearance of the select dropdown */
+  appearance: none;
+  -webkit-appearance: none;
+  -moz-appearance: none;
+}
+
+/* Style for the select element's options (if needed) */
+.input-box select option {
+  padding: 5px;
+}
+
+</style>
+<body>
+    <a class="back-button" href="{% url 'listar_colaboradores'%}"><i class="fas fa-arrow-left"></i> Volver</a>
+
+<div class="contenidoreg">
+    <section class="containeres">
+        <header>Registro de Usuario</header>
+
+        <form method="POST" class="form">
+            {% csrf_token %}
+
+            <div class="input-box">
+                <label>Nombre de Usuario:</label>
+                {{ form.username }}
+            </div>
+
+            <div class="input-box">
+                <label>Correo:</label>
+                {{ form.email}}
+            </div>
+
+            <div class="input-box">
+                <label>Contraseña:</label>
+                {{ form.password }}
+            </div>
+
+            <div class="input-box">
+                <label>Confirma Contraseña:</label>
+                {{ form.password2 }}
+            </div>
+
+            <div class="input-box">
+                <label for="grupo">Grupo:</label>
+                {{ form.group }}
+            </div>
+
+            <button class="botonguardar" type="submit">Guardar</button>
+        </form>
+    </section>
+</div>
+</body>
+{% endblock %}

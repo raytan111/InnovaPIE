@@ -1,0 +1,175 @@
+{% extends "index/base.html" %}
+{% load static %}
+
+{% block content %}
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta http-equiv="X-UA-Compatible" content="ie=edge" />
+    <link href="{% static 'index/css/stylesregusuario.css' %}" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.1/css/all.min.css">
+
+</head>
+<style>
+    body {
+        font-family: Arial, sans-serif;
+        background-color: #f4f4f4;
+    }
+
+    .contenidoreg {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        height: 104vh;
+    }
+
+    .containeres {
+        width: 900px;
+        height: 800px;
+        background-color: #ffffff;
+        padding: 20px;
+        border-radius: 8px;
+        box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    }
+
+    header {
+        font-size: 24px;
+        margin-bottom: 20px;
+        text-align: center;
+        font-weight: bold;
+    }
+
+    .input-box {
+        margin-bottom: 20px;
+    }
+
+    .input-box label {
+        display: block;
+        margin-bottom: 5px;
+        font-weight: bold;
+    }
+
+    .input-box input,
+    .input-box select {
+        width: 100%;
+        padding: 10px;
+        font-size: 16px;
+        border: 1px solid #ccc;
+        border-radius: 5px;
+        background-color: #f8f8f8;
+        appearance: none;
+    }
+
+    .input-box select {
+        width: 100%;
+        padding: 10px;
+        font-size: 16px;
+        border: 1px solid #ccc;
+        border-radius: 5px;
+        background-color: #f8f8f8;
+        /* Reemplazar la imagen con Font Awesome */
+        background-image: none;
+        /* Styling the appearance of the select dropdown */
+        appearance: none;
+        -webkit-appearance: none;
+        -moz-appearance: none;
+        position: relative;
+    }
+
+    .botonguardar {
+        width: 100%;
+        padding: 10px;
+        border: none;
+        background-color: #007BFF;
+        color: #fff;
+        border-radius: 5px;
+        font-size: 18px;
+        cursor: pointer;
+        transition: background-color 0.3s ease;
+    }
+
+    .botonguardar:hover {
+        background-color: #0056b3;
+    }
+
+    /* Estilo base para la casilla de verificación */
+    .checker input[type="checkbox"] {
+        display: none; /* Oculta la casilla de verificación predeterminada */
+    }
+
+    .checker label {
+        position: relative;
+        padding-left: 30px; /* Espacio para el ícono de la palomilla */
+        cursor: pointer;
+        font-size: 16px;
+        line-height: 24px;
+    }
+
+    /* Estilo para la casilla de verificación personalizada */
+    .checker label::before {
+        content: "";
+        position: absolute;
+        left: 0;
+        top: 50%;
+        transform: translateY(-50%);
+        width: 20px;
+        height: 20px;
+        border: 2px solid #007BFF; /* Color del borde */
+        border-radius: 4px; /* Bordes redondeados */
+        background-color: #ffffff; /* Fondo blanco */
+    }
+
+    /* Estilo para mostrar la palomilla cuando la casilla esté marcada */
+    .checker input[type="checkbox"]:checked + label::after {
+        content: "";
+        position: absolute;
+        left: 7px; /* Ajustamos la posición horizontal */
+        top: 50%; /* Centramos verticalmente */
+        transform: translateY(-50%) rotate(45deg); /* Centramos y rotamos la palomilla */
+        width: 6px;
+        height: 12px;
+        border: solid #007BFF; /* Color de la palomilla */
+        border-width: 0 2px 2px 0; /* Grosor de la palomilla */
+    }
+
+
+
+</style>
+
+<div class="contenidoreg">
+    <section class="containeres">
+        <header>Editar Usuario</header>
+        <form method="POST" class="form">
+            {% csrf_token %}
+            <div class="input-box">
+                <label>Nombre de Usuario:</label>
+                {{ form.username }}
+            </div>
+
+            <div class="input-box">
+                <label>Correo:</label>
+                {{ form.email}}
+            </div>
+            
+            <div class="input-box">
+                <label>Contraseña:</label>
+                {{ form.password }}
+            </div>
+            <div class="input-box">
+                <label>Confirmar Contraseña:</label>
+                {{ form.password2 }}
+            </div>
+            <div class="input-box">
+                <label for="{{ form.groups.id_for_label }}">Grupos:</label>
+                {{ form.groups }}
+            </div>
+            <div class="checker">
+                <input type="checkbox" id="is_active" name="is_active" {% if form.is_active.value %}checked{% endif %}>
+                <label for="is_active">Activo</label>
+
+            </div>
+            <button class="botonguardar" type="submit">Actualizar</button>
+        </form>
+    </section>
+</div>
+{% endblock %}

@@ -1,0 +1,93 @@
+{% extends "index/base.html" %}
+
+{% load static %}
+
+{% block content %}
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta http-equiv="X-UA-Compatible" content="ie=edge" />
+    <!--<title>Registration Form in HTML CSS</title>-->
+    <!---Custom CSS File--->
+    <link href="{% static 'index/css/stylesregcliente.css' %}" rel="stylesheet">
+  </head>
+  <style>
+    .back-button {
+        display: inline-block;
+        margin-right: 10px;
+        padding: 5px 10px;
+        background-color: #ffffff;
+        color: #000000;
+        border: 1px solid #000000;
+        border-radius: 5px;
+        text-decoration: none;
+        font-size: 16px;
+        transition: background-color 0.3s ease;
+    }
+
+    .back-button:hover {
+        background-color: #000000;
+        color: #ffffff;
+    }
+</style>
+<body>
+    <a class="back-button" href="{% url 'Lista Cliente'%}"><i class="fas fa-arrow-left"></i> Volver</a>
+
+
+<div class="contenidoreg">
+<section class="containeres">
+    <header>Registro de Cliente</header>
+    
+    <form action="" method="POST" class="form">
+      {% csrf_token %}
+
+      <div class="input-box">
+                  <label>Tipo de Colegio</label>
+                  {{ form.tipo_colegio }}
+      </div>
+
+
+      <div class="input-box">
+        <label>Nombre</label>
+        {{ form.nombre }}
+      </div>
+
+      <div class="input-box">
+        <label>E-Mail</label>
+        {{ form.correo }}  
+      </div>
+
+      <div class="input-box">
+        <label>Nro Teléfono</label>
+        {{ form.telefono }}   
+      </div>
+
+      <div class="input-box">
+        <label>Colegio</label>
+        {{ form.colegio }}
+      </div>
+
+      <div class="input-box address">
+        <label>Dirección</label>
+        {{ form.direccion }}  
+      </div>
+
+      <div class="input-box address">
+        <label>Ciudad</label>
+        {{ form.ciudad }} 
+      </div>
+
+      <div class="input-box address">
+        <label>Comuna</label>
+        {{ form.comuna }}
+      </div>
+
+
+      <button class="botonguardar" type="submit">Guardar</button>
+    </form>
+</section>
+
+</div>  
+</body>
+{% endblock %}

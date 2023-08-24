@@ -1,0 +1,631 @@
+body{
+	background-color: linear-gradient(to right, #ffffff, #aaabb1 ,#b6b7c4);
+	background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 1600 900'%3E%3Cdefs%3E%3ClinearGradient id='a' x1='0' x2='0' y1='1' y2='0'%3E%3Cstop offset='0' stop-color='%230FF'/%3E%3Cstop offset='1' stop-color='%23CF6'/%3E%3C/linearGradient%3E%3ClinearGradient id='b' x1='0' x2='0' y1='0' y2='1'%3E%3Cstop offset='0' stop-color='%23F00'/%3E%3Cstop offset='1' stop-color='%23FC0'/%3E%3C/linearGradient%3E%3C/defs%3E%3Cg fill='%23FFF' fill-opacity='0' stroke-miterlimit='10'%3E%3Cg stroke='url(%23a)' stroke-width='2'%3E%3Cpath transform='translate(0 0)' d='M1409 581 1450.35 511 1490 581z'/%3E%3Ccircle stroke-width='4' transform='rotate(0 800 450)' cx='500' cy='100' r='40'/%3E%3Cpath transform='translate(0 0)' d='M400.86 735.5h-83.73c0-23.12 18.74-41.87 41.87-41.87S400.86 712.38 400.86 735.5z'/%3E%3C/g%3E%3Cg stroke='url(%23b)' stroke-width='4'%3E%3Cpath transform='translate(0 0)' d='M149.8 345.2 118.4 389.8 149.8 434.4 181.2 389.8z'/%3E%3Crect stroke-width='8' transform='rotate(0 1089 759)' x='1039' y='709' width='100' height='100'/%3E%3Cpath transform='rotate(0 1400 132)' d='M1426.8 132.4 1405.7 168.8 1363.7 168.8 1342.7 132.4 1363.7 96 1405.7 96z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E");
+	background-attachment: fixed;
+	background-size: cover;
+	padding-bottom: 50px;
+  }
+
+  
+  .title-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: auto;
+    width: fit-content;
+    padding: 20px;
+    margin: auto;
+    background-color: #F0F0F0;
+    border-radius: 500px;
+}
+
+h1 {
+    font-family: 'Roboto Slab', serif;
+    font-size: 3.5em;
+    color: #003366;
+    text-align: center;
+    text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.1);
+}
+
+.flex-container {
+    display: flex; 
+    justify-content: space-between; 
+    align-items: start; /* Align items to the top */
+    flex-wrap: wrap; /* Allow items to wrap to next line if they don't fit */
+}
+
+.contenidoreg {
+    width: 68%; 
+    max-width: 2000px;
+    margin: 20px auto;
+    background-color: #c5caeb;
+    border-radius: 10px; 
+    padding: 40px;
+}
+
+.form-register {
+    text-align: center;
+    color: #020101;
+    background-color: #95badd;
+    padding: 10px;
+    font-weight: bold;
+    border-radius: 5px;
+    margin-bottom: 20px;
+}
+
+.cliente-table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-bottom: 20px;
+}
+
+.cliente-header {
+    background-color: #98c2e4;
+    color: #fff;
+}
+
+.cliente-column {
+    padding: 10px;
+}
+
+.cliente-row:nth-child(even) {
+    background-color: #e3f2fd;
+}
+
+.cliente-row:hover {
+    background-color: #bbdefb;
+}
+
+.botonagregar {
+    background-color: #242c5e;
+    color: #fff;
+    padding: 8px 16px;
+    border-radius: 5px;
+    text-decoration: none;
+}
+
+.center-button {
+    display: flex;
+    align-items: center;
+}
+
+.custom-button-container {
+    float: right;
+    text-align: right;
+}
+
+.search-container {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 10px;
+}    
+
+.monthpicker-container {
+    display: flex;  /* Habilitar Flexbox */
+    justify-content: space-between;  /* Alinear los elementos hijos (contenedores) a los extremos opuestos */
+    align-items: center;  /* Centrar verticalmente */
+    margin: 30px 0;
+}
+
+.date-selection {
+    display: flex;  
+    align-items: center;  
+    gap: 10px;
+    margin-left: 60px;  /* Moverlo un poco hacia la derecha */
+}
+
+#sales-month-year-picker.date-selector {
+    width: 500px; /* O cualquier ancho que desees */
+}
+
+.date-selectionar{
+    display: flex;  
+    align-items: center;  
+    gap: 10px;
+    margin-left: -40px;  /* Moverlo un poco hacia la derecha */
+}
+
+
+.monthpicker-container .form-control {
+    max-width: 280px; 
+    background-color: #ffffff29;
+}
+
+.form-control {
+    display: inline-block;
+    width: calc(90% - 130px); /* Ajusta el ancho del cuadro de texto para que el botón quepa en la misma línea */
+}
+
+.monthpicker-container .form-label {
+    font-family: 'Roboto Slab', serif;
+    font-size: 20px;
+}
+
+.h2pro{
+    display: flex;
+    flex-direction: column;  /* Apila los elementos verticalmente */
+    justify-content: center;  /* Centra los elementos verticalmente */
+    align-items: center;  /* Centra los elementos horizontalmente */
+}
+
+.graficos {
+    display: flex;
+    flex-wrap: wrap; /* Permitir que los elementos se envuelvan a la siguiente línea si no hay espacio */
+    justify-content: space-between;
+}
+
+.grafico-container {
+    flex: none; /* Desactivar el crecimiento automático */
+    width: calc(50% - 40px); /* Asumiendo que deseas 2 contenedores por fila y un margen de 20px entre ellos */
+    margin: 50px 20px 20px 20px;
+    padding: 20px;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    background-color: #ffff;
+}
+
+
+.grafico-container h2 {
+    margin-bottom: 20px;
+    font-size: 20px;
+    color: #333;
+}
+
+.grafico-container label {
+    display: block;
+    margin-bottom: 10px;
+}
+
+.grafico-container select {
+    width: 100%;
+    padding: 10px;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+}
+
+.grafico-container div[id$="_growth_chart"] {
+    width: 100%;
+    height: 0; /* Cambia esto a 0 para que el contenedor del gráfico no tenga altura cuando se carga la página */
+    overflow: hidden; /* Asegura que el gráfico no se desborde del contenedor */
+    margin-top: 20px;
+}
+
+.grafico-containerer {
+    flex: none;
+    width: calc(50% - 40px);
+    margin: 50px 20px 20px 20px;
+    padding: 10px;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    background-color: #ffff;
+
+    /* Propiedades para centrar contenido usando Flexbox */
+    display: flex;
+    flex-direction: column; /* Alineación vertical */
+    align-items: center; /* Centra los elementos horizontalmente */
+    height: 100%; /* Ocupa todo el alto disponible */
+}
+
+.grafico-containerer h2 {
+    margin-bottom: 20px;
+    font-size: 20px;
+    color: #333;
+}
+
+.grafico-containerer label {
+    display: block;
+    margin-bottom: 10px;
+}
+
+.grafico-containerer select {
+    width: 100%;
+    padding: 10px;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+}
+
+.grafico-containerer div[id$="_growth_chart"] {
+    width: 100%;
+    height: 0; /* Cambia esto a 0 para que el contenedor del gráfico no tenga altura cuando se carga la página */
+    overflow: hidden; /* Asegura que el gráfico no se desborde del contenedor */
+    margin-top: 20px;
+}
+
+.yearpicker-container {
+    display: flex;
+    align-items: center;
+    width: 100%;
+    gap: 10px;
+}
+
+#sales-generate-chart-button {
+    padding: 10px 20px;
+    border: none;
+    border-radius: 5px;
+    background-color: #007BFF;
+    color: white;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+
+#sales-generate-chart-button:hover {
+    background-color: #0056b3;
+}
+
+#generate-chart-button i {
+    margin-right: 5px;
+}
+
+#generate-chart-button {
+    padding: 10px 20px;
+    border: none;
+    border-radius: 5px;
+    background-color: #007BFF;
+    color: white;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+
+#generate-chart-button:hover {
+    background-color: #0056b3;
+}
+
+#generate-collaborators-button{
+    padding: 10px 20px;
+    border: none;
+    border-radius: 5px;
+    background-color: #007BFF;
+    color: white;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+    margin-top: 10px;
+    margin-bottom: 35px;
+}
+
+#generate-annual-chart-button {
+    padding: 10px 20px;
+    border: none;
+    border-radius: 5px;
+    background-color: #007BFF;
+    color: white;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+    font-size: 1em;
+    text-align: center;
+}
+
+#generate-annual-chart-button:hover {
+    background-color: #0056b3;
+}
+
+#generate-annual-chart-button i {
+    margin-right: 5px;
+}
+
+.chart-button-container {
+    margin-right: 80px;  /* Moverlo un poco hacia la izquierda */
+}
+
+
+#new-generate-chart-button{
+        padding: 10px 20px;
+        border: none;
+        border-radius: 5px;
+        background-color: #007BFF;
+        color: white;
+        cursor: pointer;
+        transition: background-color 0.3s ease;
+        font-size: 1em;
+        text-align: center;
+        width: 200px;
+    }
+
+#new-generate-chart-button:hover {
+    background-color: #0056b3;
+}
+
+
+.annual-container {
+    display: flex;
+    flex-direction: column;  /* Apila los elementos verticalmente */
+    justify-content: center;  /* Centra los elementos verticalmente */
+    align-items: center;  /* Centra los elementos horizontalmente */
+}
+
+
+
+.title-container {
+    margin-top: 0px; /* O el valor que prefieras */
+  }
+
+
+.btn-download {
+    display: inline-block;
+    padding: 10px 15px;
+    background-color: #007BFF;  /* Color de fondo azul */
+    color: white;  /* Color de texto blanco */
+    border-radius: 5px;  /* Bordes redondeados */
+    text-decoration: none;  /* Quitar subrayado */
+    transition: background-color 0.3s;  /* Transición suave al cambiar el color de fondo */
+    font-weight: bold;  /* Texto en negrita */
+    margin-top: 10px;  /* Margen superior para separarlo de la imagen */
+}
+
+.btn-download:hover {
+    background-color: #0056b3;  /* Color de fondo más oscuro al pasar el cursor */
+}
+
+.small-text {
+    font-size: 1 em;  /* Hace el texto un 80% del tamaño original */
+    color: #000000;       /* Puedes ajustar el color a tu preferencia */
+}
+
+
+
+/* sweet alert colaboradiores */
+.sweet-custom-content {
+    font-size: 16px;
+}
+
+.sweet-info-section {
+    margin-bottom: 20px;
+    border-bottom: 1px solid #e4e4e4;
+    padding-bottom: 15px;
+}
+
+.sweet-info-section:last-child {
+    border-bottom: none;
+}
+
+.sweet-info-section h4 {
+    font-weight: bold;
+    margin-bottom: 10px;
+}
+
+.sweet-info-section p {
+    margin: 5px 0;
+}
+
+
+.sweet-info-section.first-section {
+    margin-top: 20px; 
+}
+
+
+
+.collaborator-section {
+    padding: 15px;
+    margin-bottom: 20px;
+    border: 1px solid #dcdcdc;
+    border-radius: 5px;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+}
+
+.collaborator-title {
+    margin-bottom: 15px;
+    font-weight: bold;
+    color: #333;
+    border-bottom: 1px solid #dcdcdc;
+    padding-bottom: 10px;
+}
+
+.collaborator-details {
+    margin-bottom: 10px;
+}
+
+.collaborator-label {
+    font-weight: bold;
+    color: #555;
+}
+
+.collaborator-value {
+    margin-left: 10px;
+    color: #333;
+}
+
+.date-picker-container {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    width: 70%;
+    gap: 10px;
+}
+
+.date-label {
+    font-family: 'Roboto Slab', serif;
+    font-size: 20px;
+}
+
+.date-label, .date-selector, .date-button {
+    margin-right: 10px; /* Espacio entre elementos */
+}
+
+
+.date-selector {
+    width: 100%;
+    padding: 10px;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    background-color: #ffffff29;
+    flex-grow: 1;
+}
+
+.date-button {
+    padding: 10px 20px;
+    margin-top: -10px;
+    border: none;
+    border-radius: 5px;
+    background-color: #007BFF;
+    color: white;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+    font-size: 1em;
+    text-align: center;
+    width: 120px;
+}
+
+
+.date-button:hover {
+    background-color: #0056b3;
+}
+
+.colaboradores-table {
+    width: 700px;
+    border-collapse: collapse;
+    background-color: #f3f9fb;
+    margin-bottom: 20px;
+    border: 1px solid black;  /* Borde para la tabla completa */
+}
+
+.colaboradores-header {
+    background-color: #88f2fc;
+    font-weight: bold;
+}
+
+.colaboradores-row {
+    border-bottom: 1px solid black;  /* Borde inferior para cada fila */
+}
+
+.colaboradores-table th, .colaboradores-table td {
+    padding: 10px;
+    text-align: left;
+    border: 1px solid black;  /* Borde para cada celda */
+}
+
+
+#annual-chart-image {
+    margin-top: 50px; /* Ajusta este valor según cuánto quieras mover la imagen hacia abajo */
+}
+
+#table-scroll-container {
+    max-height: 300px; /* o cualquier altura que desees */
+    overflow-y: auto;
+    overflow-x: hidden;
+}
+
+
+
+
+
+
+.collab-grafico-container {
+    flex: none; /* Desactivar el crecimiento automático */
+    width: calc(50% - 40px); /* Asumiendo que deseas 2 contenedores por fila y un margen de 20px entre ellos */
+    margin: 50px 20px 20px 20px;
+    padding: 20px;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    background-color: #ffff;
+}
+
+.collab-annual-container {
+    display: flex;
+    flex-direction: column;  /* Apila los elementos verticalmente */
+    justify-content: flex-start;  /* Centra los elementos verticalmente */
+    align-items: center;  /* Centra los elementos horizontalmente */
+}
+
+.collab-small-text {
+    font-size: 1 em;  /* Hace el texto un 80% del tamaño original */
+    color: #000000;       /* Puedes ajustar el color a tu preferencia */
+}
+
+.collab-date-picker-container {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    width: 80%;
+    gap: 10px;
+}
+
+.collab-date-selection {
+    /* Estilos para la selección de fechas */
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    justify-content: center;
+}
+
+.collab-date-label {
+    font-family: 'Roboto Slab', serif;
+    font-size: 20px;
+}
+
+.collab-date-selector {
+    /* Estilos para los selectores de fecha */
+    padding: 10px;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+}
+
+.collab-date-button {
+    /* Estilos para el botón de fecha */
+    padding: 10px 20px;
+    border: none;
+    border-radius: 5px;
+    background-color: #007BFF;
+    color: white;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+
+.collab-date-button:hover {
+    background-color: #0056b3;
+}
+
+.collab-search-container {
+    /* Estilos para el contenedor de búsqueda */
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-top: 10px;
+    justify-content: center;
+}
+
+.collab-search-input {
+    /* Estilos para el cuadro de texto de búsqueda */
+    padding: 10px;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    flex-grow: 1;
+}
+
+.collab-search-button {
+    /* Estilos para el botón de búsqueda */
+    padding: -10px 10px;
+    border: none;
+    border-radius: 5px;
+    background-color: #007BFF;
+    color: white;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+
+.collab-search-button:hover {
+    background-color: #0056b3;
+}
+
+#collab-info {
+    margin-top: 30px;
+}
+
+
+.back-button {
+    display: inline-block;
+    margin-right: 10px;
+    padding: 5px 10px;
+    background-color: #0099ff;
+    color: #000000;
+    border: 1px solid #000000;
+    border-radius: 5px;
+    text-decoration: none;
+    font-size: 16px;
+    transition: background-color 0.3s ease;
+    margin-top: 25px;
+}
+
+.back-button:hover {
+    background-color: #000000;
+    color: #ffffff;
+}

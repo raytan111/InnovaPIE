@@ -1,0 +1,73 @@
+{% extends "index/base.html" %}
+
+{% load static %}
+
+{% block content %}
+    <head>
+	    <title>Inicio</title>
+	    <link rel="stylesheet" href="{% static 'index/css/styleventa.css' %}">
+	    <style>
+	        #titulo {
+	            background-image: url("{% static 'index/img/fondo-titulo.jpg' %}");
+	            background-size: cover;
+	            background-position: center;
+				background-color: #242c5e;
+	            padding: 50px 50px 50px 50px;
+	            color: #ecb101;
+	            text-align: center;
+	            margin: 0 auto;
+				border-radius: 100px;
+	            max-width: 900px;
+	        }
+	        
+	        #titulo h1 {
+	            font-size: 3em;
+	            font-weight: bold;
+	            margin-bottom: 20px;
+	            text-shadow: 2px 2px 6px rgba(0, 0, 0, 0.8);
+	        }
+	        
+	        #titulo p {
+	            font-size: 1.5em;
+	            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.8);
+	        }
+	    </style>
+    </head>
+
+    <body>
+	    <a class="back-button" href="{% url 'home'%}"><i class="fas fa-arrow-left"></i> Volver</a>
+
+	    <div id="titulo">
+		    <h1>Selecciona la función a la que deseas acceder</h1>
+	    </div>
+
+		
+
+	    <header class="menuopciones">
+		
+		    <div class="contenedor" id="uno">
+			    <a href="{% url 'ingresof' %}">
+			        <img class="icon" src="https://images.vexels.com/media/users/3/146881/isolated/preview/c9358db7338035de67f494f317a1ef61-monedas.png">
+			        <p class="texto">Ingresos</p>
+			    </a>
+		    </div>
+
+		    <div class="contenedor" id="dos">
+			    <a href="{% url 'egresof' %}"">
+			        <img class="icon" src="https://egresos.finanzas-puebla.mx/images/deuda_publica.png">
+			        <p class="texto">Egresos</p>
+			    </a>
+		    </div>
+
+		    <div class="contenedor" id="tres">
+			    <a href="{% url 'reporte' %}"">
+			        <img class="icon" src="https://w7.pngwing.com/pngs/389/442/png-transparent-computer-icons-report-report-thumbnail.png">
+			        <p class="texto">Reportes</p>
+			    </a>
+		    </div>
+
+	    </header>
+
+    </body>
+
+{% endblock %}

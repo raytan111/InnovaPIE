@@ -1,0 +1,333 @@
+{% extends "index/base.html" %}
+
+{% load static %}
+{% load custom_filters %}
+
+{% block content %}
+<head>
+    <title>Reportes</title>
+    <link href="https://fonts.googleapis.com/css2?family=Roboto+Slab:wght@700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="{% static 'index/css/stylereporte.css' %}">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/sweetalert2@10/dist/sweetalert2.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@10"></script>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+</head>
+
+<body>
+    <a class="back-button" href="{% url 'venta'%}"><i class="fas fa-arrow-left"></i> Volver</a>
+
+    <div class="title-container">
+        <h1>Reportes</h1>
+    </div>
+
+    <div class="graficos">
+        <div class="grafico-containerer">
+            <div class="h2pro">
+            <h2>Gráfico de Crecimiento Mensual</h2>
+            </div>
+            <div class="date-picker-container">
+                <label for="new-yearpicker" class="date-label">Seleccione Año:</label>
+                <select id="new-yearpicker" name="new-yearpicker" class="date-selector">
+                    <!-- Las opciones de los años serán agregadas dinámicamente con JavaScript -->
+                </select>
+                <button id="new-generate-chart-button" class="date-button"><i class="fas fa-chart-line"></i> Ver gráfico</button>
+            </div>            
+            <div>
+                <img id="new-chart-image" src="" alt="Gráfico de crecimiento mensual (Nuevo)">
+            </div>
+            <a id="new-chart-download-button" href="#" download="grafico_crecimiento_mensual.png" class="date-button" style="margin-top: 10px"><i class="fas fa-download"></i></a>
+        </div>
+        
+        <div class="grafico-container">
+            <div class="annual-container">
+                <h2>Gráfico de Crecimiento Anual</h2>
+                <img id="annual-chart-image" src="" alt="Gráfico de crecimiento anual">
+                <a id="annual-chart-download-button" href="#" download="grafico_crecimiento_anual.png" class="date-button" style="margin-top: 10px"><i class="fas fa-download"></i></a>
+            </div>
+        </div>
+        
+    </div>
+
+    <div class="flex-container"> 
+
+        <div class="collab-grafico-container">
+            <div class="collab-annual-container">
+                <h2>Información de Colaboradores</h2>
+                <p class="collab-small-text">Basado en el rango de fechas seleccionado</p>
+                
+                <!-- Campos de fecha -->
+                <div class="collab-date-picker-container">
+                    <div class="collab-date-selection">
+                        <label for="fecha_inicio" class="date-label">Fecha Inicio:</label>
+                        <input type="date" id="fecha_inicio" name="fecha_inicio" class="date-selector form-control">
+        
+                        <label for="fecha_fin" class="date-label">Fecha Fin:</label>
+                        <input type="date" id="fecha_fin" name="fecha_fin" class="date-selector form-control">
+                    </div>
+                </div>
+                
+                <!-- Cuadro de texto para filtrar y botón de búsqueda -->
+                <div class="collab-search-container">
+                    <input type="text" id="search-text" placeholder="Buscar por nombre, apellido o profesión" class="collab-search-input" style="margin-bottom: 10px;">
+                    <button onclick="loadCollaboratorsInfo()" class="date-button"><i class="fa-solid fa-table"></i> Buscar</button>
+                </div>
+        
+                <div id="collab-info">
+                    <!-- La información de los colaboradores será insertada aquí dinámicamente con JavaScript -->
+                </div>
+            </div>
+        </div>
+        
+        
+        
+
+        <div class="grafico-container">
+            <div class="h2pro">
+                <h2>Ganancia por Mes</h2>
+            </div>
+            <div class="date-picker-container text-center">
+                <div class="date-selection">
+                    <label for="sales-start-date-picker" class="date-label">Fecha Inicio:</label>
+                    <input type="month" id="sales-start-date-picker" name="sales-start-date-picker" class="date-selector form-control">
+
+                    <label for="sales-end-date-picker" class="date-label">Fecha Fin:</label>
+                    <input type="month" id="sales-end-date-picker" name="sales-end-date-picker" class="date-selector form-control">
+
+                </div>                
+                <div class="chart-button-container">
+                    <button id="sales-generate-chart-button" class="date-button" style="margin-top: 10px;"><i class="fa-solid fa-table"></i> Buscar</button>
+                </div>
+            </div>
+            <div id="table-scroll-container" style="overflow-x: auto; max-height: 400px;">
+                <div id="sales-table-container">
+                    <!-- Las tablas serán insertadas aquí dinámicamente con JavaScript -->
+                </div>
+            </div>
+        </div>
+        
+
+    </div>
+
+</body>
+
+<script>
+    function getCookie(name) {
+        var cookieValue = null;
+        if (document.cookie && document.cookie !== '') {
+            var cookies = document.cookie.split(';');
+            for (var i = 0; i < cookies.length; i++) {
+                var cookie = jQuery.trim(cookies[i]);
+                if (cookie.substring(0, name.length + 1) === (name + '=')) {
+                    cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+                    break;
+                }
+            }
+        }
+        return cookieValue;
+    }
+    
+    var csrftoken = getCookie('csrftoken');
+    
+    $.ajaxSetup({
+        headers: { "X-CSRFToken": csrftoken }
+    });
+
+    function formatCLP(number) {
+        return number.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ".");
+    }    
+
+    function fillYearOptions() {
+        var currentYear = new Date().getFullYear();
+        var yearPicker = document.getElementById('new-yearpicker');
+        for (var year = 2015; year <= currentYear; year++) {
+            var option = document.createElement("option");
+            option.value = year;
+            option.text = year;
+            yearPicker.appendChild(option);
+        }
+        yearPicker.value = currentYear;  // Establece el año actual como seleccionado
+    }
+
+    function loadMonthlyGrowthChart() {
+        var year = $("#new-yearpicker").val();
+        
+        // Realizar solicitud AJAX a la vista de Django
+        $.post("grafico1/", { fecha: year }, function(data) {
+            if (data && data.image_url) {
+                // Actualiza la imagen del gráfico
+                $("#new-chart-image").attr("src", data.image_url).show();
+    
+                // Actualiza el href del botón de descarga con la URL del gráfico
+                $("#new-chart-download-button").attr("href", data.image_url);
+    
+            } else {
+                console.error("Error obteniendo el gráfico mensual:", data);
+            }
+        });
+    }
+    
+
+    function loadAnnualGrowthChart() {
+        $.post("grafico2/", {}, function(data) {
+            if (data && data.image_url) {
+                // Actualiza la imagen del gráfico
+                $("#annual-chart-image").attr("src", data.image_url).show();
+    
+                // Actualiza el href del botón de descarga con la URL del gráfico
+                $("#annual-chart-download-button").attr("href", data.image_url);
+            } else {
+                console.error("Error obteniendo el gráfico anual:", data);
+            }
+        });
+    }
+    
+
+    function getCurrentMonth() {
+        const today = new Date();
+        const year = today.getFullYear();
+        const month = (today.getMonth() + 1).toString().padStart(2, '0'); // Añade un cero al principio si es necesario
+        return `${year}-${month}`;
+    }
+    
+    // Establecer la fecha actual en los campos de fecha cuando se carga la página
+    $(document).ready(function() {
+        const currentMonth = getCurrentMonth();
+        $("#sales-start-date-picker").val(currentMonth);
+        $("#sales-end-date-picker").val(currentMonth);
+        
+        // Llama a loadSalesTable para cargar los datos inmediatamente al abrir la página
+        loadSalesTable();
+    });
+    
+
+    function loadSalesTable() {
+        // Obtener las fechas seleccionadas en los inputs
+        var startDate = $("#sales-start-date-picker").val() + "-01";
+        var endDate = $("#sales-end-date-picker").val() + "-01";
+    
+        function formatMonthYear(dateStr) {
+            const date = new Date(dateStr);
+            const monthNames = ["Enero", "Febrero", "Marzo", "Abril", "Mayo", "Junio", "Julio", "Agosto", "Septiembre", "Octubre", "Noviembre", "Diciembre"];
+            return `${monthNames[date.getMonth()]}, ${date.getFullYear()}`;
+        }
+    
+        $.post("tabla1/", { fecha_inicio: startDate, fecha_fin: endDate }, function(data) {
+            if (data && data.results && Array.isArray(data.results)) {
+                
+                // Invertir el orden de los resultados
+                const reversedResults = data.results.reverse();
+    
+                let tableHTML = '';
+                reversedResults.forEach(monthData => {
+                    tableHTML += `
+                        <h3>${formatMonthYear(monthData.fecha_fin_str)}</h3>
+                        <table class="cliente-table" style="margin-top: 20px;">
+                            <tr class="cliente-header">
+                                <th>Total Ingresos</th>
+                                <th>Total Egreso</th>
+                                <th>Diferencia</th>
+                            </tr>
+                            <tr class="cliente-row">
+                                <td>$ ${formatCLP(monthData.total_ingreso)}</td>
+                                <td>$ ${formatCLP(monthData.total_egreso)}</td>
+                                <td>$ ${formatCLP(monthData.diferencia)}</td>
+                            </tr>
+                        </table>`;
+                });
+                $("#sales-table-container").html(tableHTML);
+            } else {
+                console.error("Error obteniendo la tabla de ventas:", data);
+            }
+        });
+    }
+    
+    $(document).ready(function() {
+        // Obteniendo la fecha actual
+        var currentDate = new Date();
+        
+        // Fecha de inicio: primer día del mes actual
+        var fechaInicioDefault = new Date(currentDate.getFullYear(), currentDate.getMonth(), 1).toISOString().slice(0, 10);
+        
+        // Fecha de fin: último día del mes actual
+        var fechaFinDefault = new Date(currentDate.getFullYear(), currentDate.getMonth() + 1, 0).toISOString().slice(0, 10);
+    
+        // Estableciendo las fechas por defecto en los pickers
+        $("#fecha_inicio").val(fechaInicioDefault);
+        $("#fecha_fin").val(fechaFinDefault);
+    
+        // Luego puedes llamar a la función para cargar la información con estas fechas preestablecidas:
+        loadCollaboratorsInfo();
+    });
+        
+
+    // Evento para detectar cuando el usuario escribe en el campo de búsqueda
+    $("#search-text").keyup(function() {
+        // Llama a la función para cargar la información de los colaboradores
+        loadCollaboratorsInfo();
+    });
+
+    function loadCollaboratorsInfo() {
+        var fecha_inicio = $("#fecha_inicio").val();
+        var fecha_fin = $("#fecha_fin").val();
+        var searchText = $("#search-text").val();  // Obtener el texto de búsqueda
+        
+        $.get("tabla2/", { fecha_inicio: fecha_inicio, fecha_fin: fecha_fin, search: searchText }, function(data) {
+            if (data && data.data) {
+                let tableMessage = `
+                    <table class="colaboradores-table">
+                        <tr class="colaboradores-header">
+                            <th>Nombre</th>
+                            <th>Profesión</th>
+                            <th>Total de Evaluaciones</th>
+                            <th>Total de Ingresos</th>
+                        </tr>
+                        ${data.data.map(perfil => `
+                            <tr class="colaboradores-row">
+                                <td>${perfil.nombre} ${perfil.apellido}</td>
+                                <td>${perfil.profesion}</td>
+                                <td>${perfil.total_evaluaciones}</td>
+                                <td>$${formatCLP(perfil.total_ingresos)}</td>
+                            </tr>
+                        `).join('')}
+                    </table>
+                `;
+
+                $("#collab-info").html(tableMessage);
+            } else {
+                console.error("Error obteniendo información de colaboradores:", data);
+            }
+        });
+    }
+
+    
+    
+    
+    
+    
+    
+
+
+    // Llamadas iniciales al cargar la página
+    $(document).ready(function() {
+        fillYearOptions();
+        loadMonthlyGrowthChart();
+        loadAnnualGrowthChart();
+        loadSalesTable();
+        loadCollaboratorsInfo();
+        
+        // Establece el mes y año actuales para el input de mes
+        var today = new Date();
+        var month = (today.getMonth() + 1).toString().padStart(2, '0');  // Asegúrate de tener dos dígitos
+        var year = today.getFullYear();
+        $("#sales-month-year-picker").val(year + '-' + month);
+        
+        // Eventos para recargar datos al cambiar de selección
+        $("#new-generate-chart-button").click(loadMonthlyGrowthChart);
+        $("#sales-generate-chart-button").click(loadSalesTable);
+    });
+
+
+</script>
+
+
+{% endblock %}

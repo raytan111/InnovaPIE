@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Cotización</title>
+    <style>
+        /* Estilos CSS para el diseño del correo */
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+        }
+
+        .container {
+            max-width: 600px;
+            margin: 0 auto;
+            padding: 20px;
+            background-color: #f5f5f5;
+        }
+
+        h1 {
+            color: #333;
+            text-align: center;
+        }
+
+        p {
+            margin-bottom: 20px;
+        }
+
+        .footer {
+            background-color: #ccc;
+            padding: 10px;
+            text-align: center;
+            color: #333;
+            font-size: 12px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Cotización</h1>
+        <p>Estimado {{ nombre_cliente }},</p>
+        <p>Adjunto encontrará la cotización solicitada. Si tiene alguna pregunta, no dude en contactarnos.</p>
+        <p>Saludos,</p>
+        <p>InnovaPIE</p>
+    </div>
+    <div class="footer">
+        &copy; 2023 InnovaPIE. Todos los derechos reservados.
+    </div>
+</body>
+</html>

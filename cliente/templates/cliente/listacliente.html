@@ -1,0 +1,157 @@
+{% extends "index/base.html" %}
+
+{% load static %}
+
+{% block content %}
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta http-equiv="X-UA-Compatible" content="ie=edge" />
+    <!--<title>Registration Form in HTML CSS</title>-->
+    <!---Custom CSS File--->
+    <link href="{% static 'index/css/styleslistacliente.css' %}" rel="stylesheet">
+    <link href="{% static 'index/css/stylesbuscarcliente.css' %}" rel="stylesheet">
+    <script src="https://kit.fontawesome.com/8c7f8de33e.js" crossorigin="anonymous"></script>
+    <style>
+        .search-container {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 10px;
+        }
+
+        .search-bar {
+            margin-right: 10px;
+        }
+
+        .center-button {
+            display: flex;
+            align-items: center;
+        }
+
+        .accion-button {
+            display: inline-block;
+            margin-right: 5px;
+        }
+
+        .eliminar-form {
+            display: inline-block;
+        }
+
+        .back-button {
+            display: inline-block;
+            margin-right: 10px;
+            padding: 5px 10px;
+            background-color: #0099ff;
+            color: #000000;
+            border: 1px solid #000000;
+            border-radius: 5px;
+            text-decoration: none;
+            font-size: 16px;
+            transition: background-color 0.3s ease;
+            margin-top: 25px;
+        }
+
+        .back-button:hover {
+            background-color: #000000;
+            color: #ffffff;
+        }
+    </style>
+</head>
+
+<body>
+    <a class="back-button" href="{% url 'home'%}"><i class="fas fa-arrow-left"></i> Volver</a>
+    <div class="contenidoreg">
+        <h2 class="form-register">Clientes</h2>
+
+        <div class="search-container">
+            <div>
+                <input id="search-bar" class="search-bar" type="text" placeholder="Buscar clientes" oninput="searchClients()">
+                <button id="search-button" class="search-button"><i class="fas fa-search"></i></button>
+            </div>
+            <div class="center-button">
+                <a class="botonagregar boton-agregar" href="{% url 'Registro Cliente' %}"><i class="fas fa-plus"></i></a>
+            </div>
+        </div>
+
+        <table class="cliente-table">
+            <tr class="cliente-header">
+                <th class="cliente-column">Colegio</th> 
+                <th class="cliente-column">Comuna</th>
+                <th class="cliente-column">Nombre del Representante</th>                
+                <th class="cliente-column">Acciones</th>
+                <th class="cliente-column">Estado</th>
+            </tr>
+
+            {% for c in cliente %}
+            <tr class="cliente-row">
+                <td class="cliente-column">{{ c.colegio }}</td>
+                <td class="cliente-column">{{ c.comuna }}</td>
+                <td class="cliente-column">{{ c.nombre }}</td>
+                <td class="cliente-column">
+                    <a href="{% url 'seleccionar_cliente' cliente_id=c.id %}" class="accion-button seleccionar-button"><i class="fas fa-eye"></i></a>
+                    <a href="{% url 'editar_cliente' c.id %}" class="accion-button editar-button"><i class="fas fa-edit"></i></a>
+                    <a style="color: white; background-color: #d60e0e;" href="{% url 'eliminar_cliente' c.id %}" data-id="{{ c.id }}" id="eliminar-btn-{{ c.id }}" class="eliminar-button"><i class="fas fa-trash"></i></a>
+                </td>
+                <td class="cliente-column">
+                    <div class="circulos">
+                        <div class="circulo azul">{{c.cont_cotizacion}}</div>
+                        <div class="circulo naranjo">{{c.cont_ventaA}}</div>
+                        <div class="circulo verde">{{c.cont_ventaC}}</div>
+                    </div>
+            </tr>
+            {% endfor %}
+        </table>
+
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11.0.18"></script>
+    <script>
+        function goBack() {
+            window.history.back();
+        }
+
+        function searchClients() {
+            var input = document.getElementById("search-bar").value.toLowerCase();
+            var rows = document.getElementsByClassName("cliente-row");
+
+            for (var i = 0; i < rows.length; i++) {
+                var nombre = rows[i].getElementsByClassName("cliente-column")[0].textContent.toLowerCase();
+                var comuna = rows[i].getElementsByClassName("cliente-column")[1].textContent.toLowerCase();
+
+                if (nombre.includes(input) || comuna.includes(input)) {
+                    rows[i].style.display = "";
+                } else {
+                    rows[i].style.display = "none";
+                }
+            }
+        }
+
+        // Obtener todos los botones de eliminar
+        var botonesEliminar = document.getElementsByClassName('eliminar-button');
+
+        // Agregar el evento de clic a cada botón de eliminar
+        Array.from(botonesEliminar).forEach(function(boton) {
+            boton.addEventListener('click', function(event) {
+                event.preventDefault(); // Evitar el comportamiento predeterminado del enlace
+
+                var clienteId = this.dataset.id; // Obtener el ID del cliente desde el atributo data-id
+
+                Swal.fire({
+                    title: 'Confirmar Eliminación',
+                    text: '¿Estás seguro de que deseas eliminar este cliente?',
+                    icon: 'warning',
+                    showCancelButton: true,
+                    confirmButtonText: 'Eliminar',
+                    cancelButtonText: 'Cancelar',
+                }).then((result) => {
+                    if (result.isConfirmed) {
+                        // Continuar con la acción de eliminación
+                        window.location.href = this.href;
+                    }
+                });
+            });
+        });
+    </script>
+</body>
+
+{% endblock %}
